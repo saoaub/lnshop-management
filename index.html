@@ -208,7 +208,47 @@
 .toast-bar{height:3px;position:absolute;bottom:0;left:0;animation:tbar 3s linear forwards;}
 @keyframes tbar{from{width:100%}to{width:0%}}
 .bar-ok{background:var(--secondary);}.bar-err{background:var(--danger);}.bar-warn{background:var(--warning);}.bar-info{background:var(--blue);}
-</style>
+
+    /* ── ORDER PAGE ── */
+    .order-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px;margin-bottom:10px;}
+    .order-card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+    .order-code{font-weight:bold;font-size:14px;color:var(--primary);}
+    .order-time{font-size:10px;color:var(--text-sub);}
+    .order-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;margin-bottom:8px;}
+    .order-info-label{color:var(--text-sub);}
+    .order-info-val{font-weight:bold;}
+    .order-items-box{background:rgba(var(--primary-rgb),.04);border-radius:6px;padding:7px 9px;font-size:11px;margin-bottom:8px;color:var(--text-sub);}
+    .order-total{font-size:14px;font-weight:bold;color:var(--primary);text-align:right;margin-bottom:8px;}
+    .order-actions{display:flex;gap:6px;flex-wrap:wrap;}
+    .status-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:bold;}
+    .sp-wait{background:rgba(243,156,18,.12);color:var(--warning);}
+    .sp-ok{background:rgba(51,153,114,.12);color:var(--primary);}
+    .sp-pack{background:rgba(52,152,219,.12);color:var(--blue);}
+    .sp-done{background:rgba(46,204,113,.12);color:var(--secondary);}
+    .slip-thumb{width:44px;height:44px;object-fit:cover;border-radius:6px;border:1.5px solid var(--border);cursor:pointer;flex-shrink:0;}
+    .order-filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+    .filter-btn{padding:5px 12px;border-radius:20px;font-size:11px;border:1.5px solid var(--border);cursor:pointer;background:var(--card-bg);color:var(--text);}
+    .filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+    .order-search{flex:1;min-width:140px;padding:7px 12px;border:1px solid var(--border);border-radius:20px;font-size:12px;background:var(--input-bg);color:var(--text);}
+
+  
+    /* ── ORDER NOTIFICATION ── */
+    .order-notif-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:8000;display:none;align-items:center;justify-content:center;padding:20px;}
+    .order-notif-overlay.open{display:flex;animation:fadeIn .3s;}
+    .order-notif-box{background:var(--card-bg);border-radius:20px;padding:24px 20px;max-width:340px;width:100%;text-align:center;border:3px solid var(--primary);position:relative;}
+    .notif-icon-wrap{width:70px;height:70px;border-radius:50%;background:rgba(var(--primary-rgb),.12);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:36px;animation:notifPulse 1s infinite;}
+    @keyframes notifPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+    .notif-title{font-size:18px;font-weight:bold;color:var(--primary);margin-bottom:6px;}
+    .notif-code{font-size:22px;font-weight:800;color:var(--primary);letter-spacing:2px;margin:6px 0;}
+    .notif-info{font-size:13px;color:var(--text-sub);margin-bottom:14px;line-height:1.6;}
+    .notif-bar{height:4px;background:rgba(var(--primary-rgb),.15);border-radius:2px;margin:12px 0;}
+    .notif-bar-inner{height:4px;background:var(--primary);border-radius:2px;transition:width linear;}
+    .notif-btns{display:flex;gap:8px;}
+    .notif-dismiss{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:none;cursor:pointer;font-size:13px;color:var(--text-sub);}
+    .notif-view{flex:1;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:bold;}
+    #notif-sound-btn{position:fixed;bottom:80px;left:12px;background:var(--card-bg);border:1.5px solid var(--border);border-radius:20px;padding:6px 12px;font-size:11px;cursor:pointer;z-index:500;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+
+  </style>
 </head>
 <body>
 <div id="toast-wrap"></div>
@@ -500,6 +540,56 @@
 <!-- ═══════════════════════════════════════
      BOTTOM NAV
 ════════════════════════════════════════ -->
+
+<!-- ═══════════════════════════════════════
+     PAGE 6 — ອໍເດີລູກຄ້າ
+════════════════════════════════════════ -->
+<div id="page6" class="page">
+  <div class="card" style="padding-bottom:6px">
+    <h3>📋 ອໍເດີລູກຄ້າ</h3>
+    <div class="order-filter-row">
+      <input type="text" class="order-search" id="order-search" placeholder="🔍 ຄົ້ນຫາ ຊື່/ເບີ/ລະຫັດ..." oninput="filterOrders()">
+      <button class="filter-btn active" onclick="filterByStatus('',this)">ທັງໝົດ</button>
+      <button class="filter-btn" onclick="filterByStatus('ລໍຖ້າຮັບຍອດ',this)">⏳ ໃໝ່</button>
+      <button class="filter-btn" onclick="filterByStatus('ແມ່ຄ້າຮັບຍອດແລ້ວ',this)">✅ ຮັບຍອດ</button>
+      <button class="filter-btn" onclick="filterByStatus('ກຳລັງກຽມການຈັດສົ່ງ',this)">📦 ກຽມສົ່ງ</button>
+      <button class="filter-btn" onclick="filterByStatus('ຈັດສົ່ງສຳເລັດ',this)">🎉 ສົ່ງແລ້ວ</button>
+    </div>
+    <div id="order-count" style="font-size:11px;color:var(--text-sub);margin-bottom:8px"></div>
+    <div id="orders-list"><div class="empty-state">⏳ ກົດ "ໂຫຼດ" ເພື່ອດຶງຂໍ້ມູນ</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SLIP / SHIPBILL VIEW MODAL
+════════════════════════════════════════ -->
+<div class="modal-overlay" id="img-modal">
+  <div class="modal-box" style="text-align:center">
+    <div class="modal-hdr"><div class="modal-title" id="img-modal-title">ສະລິບ</div><button class="close-btn" onclick="closeModal('img-modal')">✕</button></div>
+    <img id="img-modal-src" src="" style="max-width:100%;max-height:70vh;border-radius:10px;border:2px solid var(--border)">
+    <a id="img-modal-link" href="" target="_blank" style="display:block;margin-top:10px;font-size:12px;color:var(--blue)">🔗 ເປີດຕໍ່</a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     ORDER NOTIFICATION POPUP
+════════════════════════════════════════ -->
+<div class="order-notif-overlay" id="order-notif">
+  <div class="order-notif-box">
+    <div class="notif-icon-wrap">🛒</div>
+    <div class="notif-title">ມີ Order ໃໝ່ເຂົ້າມາ!</div>
+    <div class="notif-code" id="notif-code"></div>
+    <div class="notif-info" id="notif-info"></div>
+    <div class="notif-bar"><div class="notif-bar-inner" id="notif-bar-inner" style="width:100%"></div></div>
+    <div class="notif-btns">
+      <button class="notif-dismiss" onclick="dismissNotif()">ປິດ</button>
+      <button class="notif-view"    onclick="viewNewOrder()">📋 ເບິ່ງ Order</button>
+    </div>
+  </div>
+</div>
+<button id="notif-sound-btn" onclick="toggleSound()">🔔 ສຽງ: ເປີດ</button>
+
 <div class="nav">
   <div class="nav-item active-nav" onclick="nav(0,this);loadDash()"><div>🏠</div>ຫຼັກ</div>
   <div class="nav-item"            onclick="nav(1,this);loadSelect()"><div>🛒</div>ຂາຍ</div>
@@ -507,6 +597,7 @@
   <div class="nav-item"            onclick="nav(3,this);loadStk()"><div>📦</div>ສະຕ໋ອກ</div>
   <div class="nav-item"            onclick="nav(4,this);loadHis()"><div>📜</div>ປະຫວັດ</div>
   <div class="nav-item"            onclick="nav(5,this);loadSettingsPage()"><div>⚙️</div>ຕັ້ງຄ່າ</div>
+  <div class="nav-item"            onclick="nav(6,this);loadOrders()"><div>📋</div>ອໍເດີ</div>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -1163,6 +1254,279 @@ function showToast(type,title,msg,ms){
   requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add("show")));
   setTimeout(()=>{t.classList.replace("show","hide");setTimeout(()=>t.remove(),350);},ms);
 }
+
+// ════════════════════════════════
+// PAGE 6 — ORDER MANAGEMENT
+// ════════════════════════════════
+let allOrders = [], curStatusFilter = "";
+
+async function loadOrders() {
+  document.getElementById("orders-list").innerHTML = '<div class="empty-state">⏳ ກຳລັງໂຫຼດ...</div>';
+  showLoading("ໂຫຼດ Order...");
+  try {
+    const res = await fetch(SHOP_CONFIG.orderApiUrl + "?action=getAllOrders", {method:"GET", redirect:"follow"});
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch(e) { throw new Error("API format ຜິດ"); }
+    allOrders = Array.isArray(data) ? data : (Array.isArray(data.data) ? data.data : []);
+    allOrders.sort((a,b) => String(b.submittedAt||"").localeCompare(String(a.submittedAt||"")));
+    filterOrders();
+  } catch(e) {
+    document.getElementById("orders-list").innerHTML = `<div class="empty-state">❌ ${e.message}</div>`;
+  } finally { hideLoading(); }
+}
+
+function filterOrders() {
+  const q = (document.getElementById("order-search").value || "").toLowerCase().trim();
+  let filtered = allOrders;
+  if (curStatusFilter) filtered = filtered.filter(o => o.orderStatus === curStatusFilter);
+  if (q) filtered = filtered.filter(o =>
+    (o.customerName||"").toLowerCase().includes(q) ||
+    (o.customerPhone||"").toLowerCase().includes(q) ||
+    (o.code||"").toLowerCase().includes(q) ||
+    (o.itemsSummary||"").toLowerCase().includes(q)
+  );
+  document.getElementById("order-count").textContent = filtered.length + " ລາຍການ";
+  renderOrders(filtered);
+}
+
+function filterByStatus(status, el) {
+  curStatusFilter = status;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  if (el) el.classList.add("active");
+  filterOrders();
+}
+
+function renderOrders(orders) {
+  const el = document.getElementById("orders-list");
+  if (!orders.length) { el.innerHTML = '<div class="empty-state">ບໍ່ມີ Order</div>'; return; }
+
+  const statusMap = {
+    "ລໍຖ້າຮັບຍອດ":       { cls:"sp-wait", emoji:"⏳" },
+    "ແມ່ຄ້າຮັບຍອດແລ້ວ": { cls:"sp-ok",   emoji:"✅" },
+    "ກຳລັງກຽມການຈັດສົ່ງ":{ cls:"sp-pack", emoji:"📦" },
+    "ຈັດສົ່ງສຳເລັດ":     { cls:"sp-done", emoji:"🎉" },
+  };
+
+  let h = "";
+  orders.forEach(o => {
+    const st = statusMap[o.orderStatus] || { cls:"sp-wait", emoji:"❓" };
+    const slipHtml = o.slipUrl
+      ? `<img class="slip-thumb" src="${driveThumb(o.slipUrl,80)}" onclick="viewImg('${o.slipUrl}','ສະລິບ')" onerror="this.style.display='none'">`
+      : `<span style="font-size:11px;color:${o.slipStatus==='✅ ມີ'?'var(--secondary)':'var(--danger)'}">${o.slipStatus||'❌ ບໍ່ມີ Slip'}</span>`;
+    const shipBillHtml = o.shippingBillUrl
+      ? `<button class="btn btn-blue" style="font-size:10px;padding:5px 8px" onclick="viewImg('${o.shippingBillUrl}','ບິນຂົນສົ່ງ')">📤 ບິນສົ່ງ</button>`
+      : "";
+    const code = (o.code||"").replace(/'/g, "\'");
+    h += `<div class="order-card">
+      <div class="order-card-hdr">
+        <div>
+          <div class="order-code">#${o.code||"-"}</div>
+          <div class="order-time">🕐 ${o.submittedAt||"-"}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${slipHtml}
+          <span class="status-pill ${st.cls}">${st.emoji} ${o.orderStatus||"?"}</span>
+        </div>
+      </div>
+      <div class="order-info-grid">
+        <span class="order-info-label">👤 ຊື່</span><span class="order-info-val">${o.customerName||"-"}</span>
+        <span class="order-info-label">📞 ເບີ</span><span class="order-info-val">
+          <a href="${waLink(o.customerPhone)}" target="_blank" style="color:var(--primary)">${o.customerPhone||"-"}</a>
+        </span>
+        <span class="order-info-label">📍 ທີ່ຢູ່</span><span class="order-info-val">${o.customerAddr||"-"}</span>
+        <span class="order-info-label">🚚 ຂົນສົ່ງ</span><span class="order-info-val">${o.shipping||"-"}</span>
+        <span class="order-info-label">💳 ຊຳລະ</span><span class="order-info-val">${o.payment||"-"}</span>
+        ${o.note ? `<span class="order-info-label">📝 ໝາຍເຫດ</span><span class="order-info-val">${o.note}</span>` : ""}
+      </div>
+      <div class="order-items-box">${(o.itemsSummary||"-").replace(/\n/g,"<br>")}</div>
+      <div class="order-total">💰 ລວມ: ${fN(o.totalAmount||0)} ₭</div>
+      <div class="order-actions">
+        <button class="btn" style="flex:1;font-size:11px;padding:7px;background:var(--primary)" onclick="updateStatus('${code}','ລໍຖ້າຮັບຍອດ')">⏳ ໃໝ່</button>
+        <button class="btn" style="flex:1;font-size:11px;padding:7px;background:var(--secondary)" onclick="updateStatus('${code}','ແມ່ຄ້າຮັບຍອດແລ້ວ')">✅ ຮັບຍອດ</button>
+        <button class="btn" style="flex:1;font-size:11px;padding:7px;background:var(--blue)" onclick="updateStatus('${code}','ກຳລັງກຽມການຈັດສົ່ງ')">📦 ກຽມສົ່ງ</button>
+        <button class="btn" style="flex:1;font-size:11px;padding:7px;background:#8e44ad" onclick="updateStatus('${code}','ຈັດສົ່ງສຳເລັດ')">🎉 ສົ່ງແລ້ວ</button>
+        ${shipBillHtml}
+        <button class="btn btn-dang" style="font-size:11px;padding:7px" onclick="deleteOrderConfirm('${code}')">🗑️</button>
+      </div>
+    </div>`;
+  });
+  el.innerHTML = h;
+}
+
+async function updateStatus(code, newStatus) {
+  showLoading("ອັບເດດ...");
+  try {
+    const res = await fetch(SHOP_CONFIG.orderApiUrl, {
+      method:"POST", redirect:"follow",
+      headers:{"Content-Type":"text/plain"},
+      body: JSON.stringify({action:"updateOrderStatus", code, status: newStatus})
+    });
+    const text = await res.text();
+    const json = JSON.parse(text);
+    if (json.status === "error") throw new Error(json.message);
+    showToast("ok", "ອັບເດດສຳເລັດ!", "#" + code + " → " + newStatus);
+    // Update local
+    const idx = allOrders.findIndex(o => o.code === code);
+    if (idx >= 0) allOrders[idx].orderStatus = newStatus;
+    filterOrders();
+  } catch(e) {
+    showToast("err", "ຜິດພາດ!", e.message);
+  } finally { hideLoading(); }
+}
+
+async function deleteOrderConfirm(code) {
+  if (!confirm("ລຶບ Order #" + code + " ຈິງບໍ?")) return;
+  showLoading("ລຶບ...");
+  try {
+    const res = await fetch(SHOP_CONFIG.orderApiUrl, {
+      method:"POST", redirect:"follow",
+      headers:{"Content-Type":"text/plain"},
+      body: JSON.stringify({action:"deleteOrder", code})
+    });
+    const text = await res.text();
+    const json = JSON.parse(text);
+    if (json.status === "error") throw new Error(json.message);
+    showToast("ok", "ລຶບສຳເລັດ!", "#" + code);
+    allOrders = allOrders.filter(o => o.code !== code);
+    filterOrders();
+  } catch(e) {
+    showToast("err", "ຜິດພາດ!", e.message);
+  } finally { hideLoading(); }
+}
+
+function viewImg(url, title) {
+  const thumbUrl = driveThumb(url, 800) || url;
+  document.getElementById("img-modal-title").textContent = title;
+  document.getElementById("img-modal-src").src = thumbUrl;
+  document.getElementById("img-modal-link").href = url;
+  openModal("img-modal");
+}
+
+
+// ════════════════════════════════
+// ORDER NOTIFICATION SYSTEM
+// ════════════════════════════════
+let notifEnabled    = true;
+let notifTimer      = null;
+let pollInterval    = null;
+let lastOrderCodes  = new Set();
+let notifNewOrder   = null;
+const POLL_SECS     = 30; // ດຶງຂໍ້ມູນທຸກ 30 ວິ
+
+// ─── Init polling ─────────────────────────────
+function initOrderPolling() {
+  // ໂຫຼດ Order ຄັ້ງທຳອິດ ເພື່ອຈື່ code ທີ່ມີຢູ່ແລ້ວ
+  fetchLatestOrders(true);
+  // ເລີ່ມ poll
+  clearInterval(pollInterval);
+  pollInterval = setInterval(() => fetchLatestOrders(false), POLL_SECS * 1000);
+}
+
+async function fetchLatestOrders(isInit) {
+  try {
+    const res  = await fetch(SHOP_CONFIG.orderApiUrl + "?action=getAllOrders", {method:"GET", redirect:"follow"});
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch(e) { return; }
+    const orders = Array.isArray(data) ? data : (Array.isArray(data.data) ? data.data : []);
+
+    if (isInit) {
+      // ຄັ້ງທຳອິດ — ຈື່ code ທັງໝົດ ບໍ່ alert
+      orders.forEach(o => { if (o.code) lastOrderCodes.add(o.code); });
+      return;
+    }
+
+    // ຄັ້ງຕໍ່ໄປ — ກວດ Order ໃໝ່
+    orders.forEach(o => {
+      if (!o.code) return;
+      if (!lastOrderCodes.has(o.code)) {
+        lastOrderCodes.add(o.code);
+        showOrderNotif(o);
+        // ໂຫຼດ list ໃໝ່ຖ້າຢູ່ໜ້າ Order
+        if (document.getElementById("page6").classList.contains("active")) {
+          loadOrders();
+        }
+      }
+    });
+  } catch(e) {
+    // silent fail
+  }
+}
+
+// ─── Show notification popup ──────────────────
+function showOrderNotif(order) {
+  notifNewOrder = order;
+  document.getElementById("notif-code").textContent = "#" + (order.code || "");
+  document.getElementById("notif-info").innerHTML =
+    `👤 ${order.customerName||"-"}<br>` +
+    `📞 ${order.customerPhone||"-"}<br>` +
+    `💰 ${fN(order.totalAmount||0)} ₭ · ${order.payment||"-"}`;
+
+  document.getElementById("order-notif").classList.add("open");
+
+  // ສຽງແຈ້ງເຕືອນ
+  if (notifEnabled) playNotifSound();
+
+  // Progress bar 3 ວິ
+  const bar = document.getElementById("notif-bar-inner");
+  bar.style.transition = "none";
+  bar.style.width = "100%";
+  setTimeout(() => {
+    bar.style.transition = "width 3s linear";
+    bar.style.width = "0%";
+  }, 50);
+
+  // Auto dismiss 3 ວິ
+  clearTimeout(notifTimer);
+  notifTimer = setTimeout(() => dismissNotif(), 3000);
+}
+
+function dismissNotif() {
+  clearTimeout(notifTimer);
+  document.getElementById("order-notif").classList.remove("open");
+}
+
+function viewNewOrder() {
+  dismissNotif();
+  // ໄປໜ້າ Order
+  const navItems = document.querySelectorAll(".nav-item");
+  navItems.forEach(n => n.classList.remove("active-nav"));
+  navItems[navItems.length - 1].classList.add("active-nav");
+  nav(6, navItems[navItems.length - 1]);
+  loadOrders();
+}
+
+// ─── Sound ───────────────────────────────────
+function playNotifSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523, 659, 784, 659, 784]; // Do Mi Sol Mi Sol
+    notes.forEach((freq, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type      = "sine";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.12 + 0.2);
+      osc.start(ctx.currentTime + i * 0.12);
+      osc.stop(ctx.currentTime + i * 0.12 + 0.25);
+    });
+  } catch(e) {}
+}
+
+function toggleSound() {
+  notifEnabled = !notifEnabled;
+  document.getElementById("notif-sound-btn").textContent = notifEnabled ? "🔔 ສຽງ: ເປີດ" : "🔕 ສຽງ: ປິດ";
+}
+
+// ─── Start polling when page loads ───────────
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(initOrderPolling, 3000); // ລໍ 3 ວິ ຫຼັງ page load
+});
+
 </script>
 </body>
 </html>
