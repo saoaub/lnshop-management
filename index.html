@@ -223,15 +223,16 @@
     .order-items-box{background:rgba(var(--primary-rgb),.05);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:7px 10px;font-size:11px;margin:8px 0;color:var(--text-sub);line-height:1.6;}
     .order-total-row{display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px;font-size:13px;}
     .order-total-amt{font-weight:bold;font-size:16px;color:var(--primary);}
-    /* Status buttons — 2 rows */
-    .status-btns{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px;}
-    .st-btn{border:none;border-radius:var(--radius-sm);padding:8px 4px;font-size:11px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;}
+    /* Status buttons — compact pill row */
+    .status-btns{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;}
+    .st-btn{border:none;border-radius:20px;padding:5px 10px;font-size:11px;font-weight:500;cursor:pointer;transition:.2s;white-space:nowrap;}
     .st-wait{background:#fff3cd;color:#856404;border:1.5px solid #ffc107;}
     .st-ok{background:#d1e7dd;color:#0a3622;border:1.5px solid #198754;}
     .st-pack{background:#cfe2ff;color:#052c65;border:1.5px solid #0d6efd;}
     .st-done{background:#e2d9f3;color:#3d1a6e;border:1.5px solid #6f42c1;}
-    .st-btn.current{opacity:1;box-shadow:0 0 0 2px rgba(0,0,0,.15);transform:scale(1.02);}
-    .st-btn:not(.current){opacity:.65;}
+    .st-btn.current{font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,.15);transform:scale(1.05);}
+    .st-btn:not(.current){opacity:.5;filter:saturate(.6);}
+    .st-btn:not(.current):hover{opacity:.85;}
     /* slip area */
     .slip-area{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.02);border-radius:8px;padding:8px 10px;margin-bottom:8px;}
     .slip-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1.5px solid var(--border);cursor:pointer;flex-shrink:0;}
@@ -1211,10 +1212,10 @@ async function loadStk(){
     data.forEach(r=>{
       const qty=Number(r.qty)||0,imgUrl=r.img?convertGD(r.img):"";
       const qCls=qty<=0?"badge-out":qty<=5?"badge-low":"badge-ok";
-      const thumb=imgUrl?`<img src="${imgUrl}" style="width:34px;height:34px;object-fit:cover;border-radius:5px;vertical-align:middle;margin-right:4px" onerror="this.style.display='none'">`:""
+      const thumb=imgUrl?`<img src="${imgUrl}" style="width:52px;height:52px;object-fit:cover;border-radius:8px;vertical-align:middle;margin-right:8px;border:1.5px solid var(--border)" onerror="this.style.display='none'">`:""
       const sn=r.name.replace(/\\/g,"\\\\").replace(/'/g,"\\'");
       const imgEnc=encodeURIComponent(r.img||"");
-      h+=`<tr><td style="min-width:80px">${thumb}<b style="font-size:11px">${r.name}</b></td><td style="font-size:11px;color:var(--text-sub)">${fN(Number(r.cost))}</td><td style="font-size:11px;color:var(--primary);font-weight:bold">${fN(Number(r.price))}</td><td><span class="badge-pill ${qCls}">${qty}</span></td><td><div class="action-btns" style="flex-direction:column;gap:3px"><button class="btn-act bg-succ" onclick="openStkModal('${sn}','${r.cost}','${r.price}','${qty}','${imgEnc}','add')">➕</button><button class="btn-act bg-warn" onclick="openStkModal('${sn}','${r.cost}','${r.price}','${qty}','${imgEnc}','edit')">✏️</button><button class="btn-act bg-dang" onclick="openStkModal('${sn}','${r.cost}','${r.price}','${qty}','${imgEnc}','del')">🗑️</button></div></td></tr>`;
+      h+=`<tr><td style="min-width:100px;vertical-align:middle">${thumb}<b style="font-size:12px">${r.name}</b></td><td style="font-size:11px;color:var(--text-sub)">${fN(Number(r.cost))}</td><td style="font-size:11px;color:var(--primary);font-weight:bold">${fN(Number(r.price))}</td><td><span class="badge-pill ${qCls}">${qty}</span></td><td><div class="action-btns" style="flex-direction:column;gap:3px"><button class="btn-act bg-succ" onclick="openStkModal('${sn}','${r.cost}','${r.price}','${qty}','${imgEnc}','add')">➕</button><button class="btn-act bg-warn" onclick="openStkModal('${sn}','${r.cost}','${r.price}','${qty}','${imgEnc}','edit')">✏️</button><button class="btn-act bg-dang" onclick="openStkModal('${sn}','${r.cost}','${r.price}','${qty}','${imgEnc}','del')">🗑️</button></div></td></tr>`;
     });
     document.getElementById("stk-table").innerHTML=h+"</table>";
   }catch(e){document.getElementById("stk-table").innerHTML=`<div class="empty-state">❌ ${e.message}</div>`;}
@@ -1425,7 +1426,7 @@ function renderOrders(orders) {
     // Shipbill area
     const shipBillHtml = o.shippingBillUrl
       ? `<img class="slip-thumb" src="${driveThumb(o.shippingBillUrl,80)}" onclick="viewImg('${o.shippingBillUrl}','ບິນຂົນສົ່ງ')" onerror="this.style.display='none'" title="ເບິ່ງບິນຂົນສົ່ງ">`
-      : `<button class="slip-upload-btn" onclick="uploadShipBill('${code}')">📤 ອັບບິນ</button>`;
+      : `<button class="slip-upload-btn" data-upload-code="${code}" onclick="uploadShipBill('${code}')">📤 ອັບບິນ</button>`;
 
     // Status buttons
     const stBtns = statusDef.map(s=>`
