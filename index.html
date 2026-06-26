@@ -48,20 +48,21 @@
     .btn-act{border:none;border-radius:4px;padding:5px 8px;color:#fff;font-size:11px;cursor:pointer;}
     .bg-warn{background:var(--warning)!important;}.bg-dang{background:var(--danger)!important;}.bg-succ{background:var(--secondary)!important;}.bg-blue{background:var(--blue)!important;}
     /* ── BANNER ── */
-    .banner-wrap{position:relative;width:100%;height:200px;overflow:hidden;background:linear-gradient(135deg,#1a4a35,#339972);border-radius:0 0 var(--radius-lg) var(--radius-lg);}
-    .banner-slides{display:flex;width:100%;height:100%;transition:transform .5s;}
-    .banner-slide{min-width:100%;height:100%;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;}
-    .banner-slide-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.45),rgba(0,0,0,.15));z-index:1;}
-    .banner-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-    .banner-slide-info{position:relative;z-index:2;text-align:center;color:#fff;padding:8px 12px;width:100%;}
-    .banner-rank-badge{display:inline-block;background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.55);border-radius:20px;padding:3px 14px;font-size:12px;font-weight:700;margin-bottom:5px;}
-    .banner-prod-name{font-size:18px;font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,.5);margin-bottom:3px;}
-    .banner-prod-qty{font-size:12px;opacity:.9;background:rgba(255,255,255,.18);border-radius:10px;padding:2px 10px;display:inline-block;}
-    .banner-dots{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:5;}
-    .banner-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;}
-    .banner-dot.active{background:#fff;}
+        /* ── BANNER FADE SLIDESHOW ── */
+    .banner-wrap{position:relative;width:100%;height:210px;overflow:hidden;background:linear-gradient(135deg,#4a0030,#b5006b);border-radius:0 0 20px 20px;}
+    .banner-fade-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s ease-in-out;display:flex;align-items:flex-end;}
+    .banner-fade-slide.active{opacity:1;}
+    .banner-fade-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+    .banner-fade-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(0,0,0,.1) 60%);}
+    .banner-fade-info{position:relative;z-index:2;padding:12px 16px;width:100%;}
+    .banner-rank-badge{display:inline-block;background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.55);border-radius:20px;padding:3px 14px;font-size:11px;font-weight:700;margin-bottom:4px;}
+    .banner-prod-name{font-size:17px;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6);margin-bottom:2px;}
+    .banner-prod-price{font-size:13px;color:rgba(255,255,255,.9);font-weight:bold;}
+    .banner-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:5;}
+    .banner-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:.3s;}
+    .banner-dot.active{background:#fff;width:18px;border-radius:3px;}
     .banner-arrows{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 8px;z-index:5;}
-    .banner-arrow{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.45);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .banner-arrow{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.4);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
     /* ── TICKER ── */
     .ticker-wrap{width:100%;background:linear-gradient(90deg,#b5006b,#ff69b4 40%,#b5006b);overflow:hidden;height:36px;display:flex;align-items:center;}
     .ticker-label{flex-shrink:0;background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:700;padding:0 10px;height:100%;display:flex;align-items:center;}
@@ -296,9 +297,8 @@
 ════════════════════════════════════════ -->
 <div id="page0" class="page active" style="padding:0">
   <div class="banner-wrap" id="banner-wrap">
-    <div id="banner-loading" style="width:100%;height:200px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7)">⏳ ກຳລັງໂຫຼດ...</div>
-    <div class="banner-slides" id="banner-slides" style="display:none"></div>
-    <div class="banner-dots"   id="banner-dots"   style="display:none"></div>
+    <div id="banner-slides"></div>
+    <div class="banner-dots" id="banner-dots"></div>
     <div class="banner-arrows">
       <div class="banner-arrow" onclick="bannerPrev()">‹</div>
       <div class="banner-arrow" onclick="bannerNext()">›</div>
@@ -721,12 +721,23 @@ function buildProvinceSelect(){
 }
 
 function buildSocialLinks(){
-  const icons={facebook:"📘",tiktok:"🎵",whatsapp:"💬",instagram:"📸"};
+  const svgs={
+    facebook:`<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
+    tiktok:`<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>`,
+    whatsapp:`<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>`,
+    whatsapp2:`<svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>`,
+    instagram:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+  };
+  const names={facebook:"Facebook",tiktok:"TikTok",whatsapp:"WhatsApp",whatsapp2:"WhatsApp2",instagram:"Instagram"};
   let h="";
   const s=SHOP_CONFIG.social||{};
   Object.keys(s).forEach(k=>{
     const item=s[k];
-    if(item&&item.url) h+=`<a href="${item.url}" target="_blank" class="social-btn"><span>${icons[k]||"🔗"}</span>${item.name||""}</a>`;
+    if(item&&item.url){
+      const icon=svgs[k]||"🔗";
+      const nm=item.name||names[k]||k;
+      h+=`<a href="${item.url}" target="_blank" class="social-btn">${icon}<span style="margin-left:3px">${nm}</span></a>`;
+    }
   });
   document.getElementById("header-social-links").innerHTML=h;
 }
@@ -746,25 +757,32 @@ function openModal(id){document.getElementById(id).classList.add("open");}
 // BANNER
 // ════════════════════════════════
 function loadBanner(top10){
-  const slidesEl=document.getElementById("banner-slides"),dotsEl=document.getElementById("banner-dots"),loadEl=document.getElementById("banner-loading");
-  if(!top10||!top10.length){loadEl.innerHTML='<div style="color:rgba(255,255,255,.6)">🏪 ຍັງບໍ່ມີຂໍ້ມູນ</div>';return;}
+  const slidesEl=document.getElementById("banner-slides"),dotsEl=document.getElementById("banner-dots");
+  slidesEl.innerHTML="";dotsEl.innerHTML="";
+  if(!top10||!top10.length){
+    slidesEl.innerHTML='<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7)">🏪 ຍັງບໍ່ມີຂໍ້ມູນ</div>';
+    return;
+  }
   bannerItems=top10;bannerIdx=0;
   const emojis=["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"];
-  let sh="",dh="";
   top10.forEach((item,i)=>{
     const img=item.img?convertGD(item.img):"";
-    sh+=`<div class="banner-slide">${img?`<img src="${img}" alt="${item.name}" onerror="this.style.display='none'">`:""}<div class="banner-slide-bg"></div><div class="banner-slide-info"><div class="banner-rank-badge">${emojis[i]} Top ${i+1}</div><div class="banner-prod-name">${item.name}</div><div class="banner-prod-qty">🛒 ຂາຍ ${fN(item.qty)} ຊິ້ນ</div></div></div>`;
-    dh+=`<div class="banner-dot${i===0?" active":""}" onclick="bannerGoto(${i})"></div>`;
+    const div=document.createElement("div");
+    div.className="banner-fade-slide"+(i===0?" active":"");
+    div.innerHTML=`${img?`<img src="${img}" alt="${item.name}" onerror="this.style.background='linear-gradient(135deg,#4a0030,#b5006b)'">`:""}<div class="banner-fade-overlay"></div><div class="banner-fade-info"><div class="banner-rank-badge">${emojis[i]} Top ${i+1}</div><div class="banner-prod-name">${item.name}</div><div class="banner-prod-price">💰 ${fN(item.price||0)} ₭ · ຂາຍ ${fN(item.qty)} ຊິ້ນ</div></div>`;
+    slidesEl.appendChild(div);
+    const dot=document.createElement("div");
+    dot.className="banner-dot"+(i===0?" active":"");
+    dot.onclick=()=>bannerGoto(i);
+    dotsEl.appendChild(dot);
   });
-  slidesEl.innerHTML=sh;dotsEl.innerHTML=dh;
-  loadEl.style.display="none";slidesEl.style.display="flex";dotsEl.style.display="flex";
-  bannerGoto(0);clearInterval(bannerTimer);
-  bannerTimer=setInterval(bannerNext,3500);
+  clearInterval(bannerTimer);
+  bannerTimer=setInterval(bannerNext,4000);
 }
 function bannerGoto(idx){
   if(!bannerItems.length)return;
   bannerIdx=((idx%bannerItems.length)+bannerItems.length)%bannerItems.length;
-  document.getElementById("banner-slides").style.transform=`translateX(-${bannerIdx*100}%)`;
+  document.querySelectorAll(".banner-fade-slide").forEach((s,i)=>s.classList.toggle("active",i===bannerIdx));
   document.querySelectorAll(".banner-dot").forEach((d,i)=>d.classList.toggle("active",i===bannerIdx));
 }
 function bannerNext(){bannerGoto(bannerIdx+1);}
@@ -1347,6 +1365,7 @@ function renderOrders(orders) {
         <button class="btn" style="flex:1;font-size:11px;padding:7px;background:var(--blue)" onclick="updateStatus('${code}','ກຳລັງກຽມການຈັດສົ່ງ')">📦 ກຽມສົ່ງ</button>
         <button class="btn" style="flex:1;font-size:11px;padding:7px;background:#8e44ad" onclick="updateStatus('${code}','ຈັດສົ່ງສຳເລັດ')">🎉 ສົ່ງແລ້ວ</button>
         ${shipBillHtml}
+        <button class="btn" style="font-size:11px;padding:7px;background:#8e44ad" onclick="uploadShipBill('${code}')">📤 ອັບບິນ</button>
         <button class="btn btn-dang" style="font-size:11px;padding:7px" onclick="deleteOrderConfirm('${code}')">🗑️</button>
       </div>
     </div>`;
