@@ -181,11 +181,13 @@
     .stock-ok{color:var(--secondary);font-weight:bold;}
     .stock-low{color:var(--warning);font-weight:bold;}
     .stock-out{color:var(--danger);font-weight:bold;}
-    /* ── LOADING ── */
-    #api-loading{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:9998;display:none;align-items:center;justify-content:center;}
-    #api-loading.show{display:flex;}
-    .api-spinner{background:var(--card-bg);border-radius:12px;padding:20px 28px;text-align:center;}
-    .api-spinner-icon{width:36px;height:36px;border:4px solid rgba(51,153,114,.2);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px;}
+    /* ── SKELETON LOADING ── */
+    .skel{background:linear-gradient(90deg,var(--border) 25%,rgba(200,200,200,.3) 50%,var(--border) 75%);background-size:200% 100%;animation:skelShim 1.2s infinite;border-radius:6px;}
+    @keyframes skelShim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .skel-row{height:14px;margin-bottom:8px;border-radius:4px;}
+    .skel-img{border-radius:8px;}
+    /* ── MINI SPINNER (inline, non-blocking) ── */
+    .mini-spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(51,153,114,.2);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:5px;}
     @keyframes spin{to{transform:rotate(360deg)}}
     /* ── TOP5 ── */
     .top5-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px;}
@@ -275,7 +277,6 @@
 </head>
 <body>
 <div id="toast-wrap"></div>
-<div id="api-loading"><div class="api-spinner"><div class="api-spinner-icon"></div><div class="api-spinner-text">ກຳລັງໂຫຼດ...</div></div></div>
 <!-- ═══════════════════════════════════════
      HEADER
 ════════════════════════════════════════ -->
@@ -785,8 +786,15 @@ function nav(p,el){
   document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active-nav"));
   el.classList.add("active-nav");
 }
-function showLoading(msg){document.querySelector(".api-spinner-text").textContent=msg||"ກຳລັງໂຫຼດ...";document.getElementById("api-loading").classList.add("show");}
-function hideLoading(){document.getElementById("api-loading").classList.remove("show");}
+// Non-blocking: show mini spinner in button that triggered action
+let _loadingBtns = [];
+function showLoading(msg) {
+  // Just log — no blocking overlay
+  if (msg) console.log("[loading]", msg);
+}
+function hideLoading() {
+  // no-op
+}
 function closeModal(id){document.getElementById(id).classList.remove("open");}
 function openModal(id){document.getElementById(id).classList.add("open");}
 
@@ -848,11 +856,10 @@ async function loadBannerSettings(){
 async function saveBannerSettings(){
   const txt=(document.getElementById("set-ticker-text").value||"").trim();
   if(!txt){showToast("warn","ກະລຸນາໃສ່ຂໍ້ຄວາມ!");return;}
-  showLoading("ກຳລັງບັນທຶກ...");
   try{
     const res=await api.post("saveBannerSettings",{settings:{tickerText:txt}});
     _savedTickerText=txt;renderTicker(txt,bannerItems);showToast("ok","ສຳເລັດ!",res.message);
-  }catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}
+  }catch(e){showToast("err","ຜິດພາດ!",e.message);}
 }
 
 // ════════════════════════════════
@@ -934,7 +941,11 @@ function setGridCols(n,el){document.documentElement.style.setProperty("--grid-co
 // DASHBOARD
 // ════════════════════════════════
 async function loadDash(){
-  showLoading("ກຳລັງໂຫຼດ Dashboard...");
+  // Show skeleton in stats
+  document.getElementById("ds-orders").innerHTML='<div class="skel skel-row" style="width:40px;height:18px"></div>';
+  document.getElementById("ds-sales").innerHTML='<div class="skel skel-row" style="width:55px;height:18px"></div>';
+  document.getElementById("ds-profit").innerHTML='<div class="skel skel-row" style="width:55px;height:18px"></div>';
+  document.getElementById("today-bills-list").innerHTML='<div class="skel skel-row" style="height:40px"></div><div class="skel skel-row" style="height:40px"></div>';
   try{
     const [top10,data]=await Promise.all([api.get("getWeeklyTop10"),api.get("getDashboard")]);
     loadBanner(top10);
@@ -958,7 +969,7 @@ async function loadDash(){
     renderTodayBills(td.rawRows||[]);
     computeTop5(data);
   }catch(e){showToast("err","ໂຫຼດ Dashboard ບໍ່ສຳເລັດ!",e.message);}
-  finally{hideLoading();}
+  
 }
 function renderTodayBills(rows){
   const el=document.getElementById("today-bills-list");
@@ -995,8 +1006,8 @@ function openBillGroup(rows){
   document.getElementById("bill-modal-content").innerHTML=h;
   openModal("bill-modal");
 }
-async function editBillR(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;showLoading("ແກ້ໄຂ...");try{const res=await api.post("editSaleRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});showToast("ok","ສຳເລັດ!",res.message);closeModal("bill-modal");loadDash();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
-async function delBillR(r){if(!confirm("ລຶບ?"))return;showLoading("ລຶບ...");try{const res=await api.post("cancelSaleData",{dateStr:String(r[0]),name:r[1],qty:r[2]});showToast("ok","ສຳເລັດ!",res.message);closeModal("bill-modal");loadDash();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
+async function editBillR(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;try{const res=await api.post("editSaleRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});showToast("ok","ສຳເລັດ!",res.message);closeModal("bill-modal");loadDash();}catch(e){showToast("err","ຜິດພາດ!",e.message);}}
+async function delBillR(r){if(!confirm("ລຶບ?"))return;try{const res=await api.post("cancelSaleData",{dateStr:String(r[0]),name:r[1],qty:r[2]});showToast("ok","ສຳເລັດ!",res.message);closeModal("bill-modal");loadDash();}catch(e){showToast("err","ຜິດພາດ!",e.message);}}
 function showDashDetail(date){
   const day=dashData[date];
   document.getElementById("dash-date-title").textContent="📅 "+date;
@@ -1044,10 +1055,11 @@ function prevTop5(){gotoTop5((top5Idx-1+Math.max(1,top5Data.length))%Math.max(1,
 // PRODUCTS / SALE
 // ════════════════════════════════
 async function loadSelect(){
-  showLoading("ໂຫຼດສິນຄ້າ...");
+  const grid=document.getElementById("prod-grid");
+  grid.innerHTML=Array(8).fill('<div class="skel skel-img" style="height:90px"></div>').join('');
   try{allProds=await api.get("getProducts");renderProdGrid(allProds);}
   catch(e){document.getElementById("prod-grid").innerHTML=`<div class="empty-state">❌ ${e.message}</div>`;}
-  finally{hideLoading();}
+  
 }
 function filterProd(){const q=document.getElementById("prod-search").value.toLowerCase().trim();renderProdGrid(q?allProds.filter(r=>(r.name||"").toLowerCase().includes(q)):allProds);}
 function renderProdGrid(prods){
@@ -1114,9 +1126,11 @@ async function submitSale(){
   if(!cart.length){showToast("warn","ຍັງບໍ່ໄດ້ເພີ່ມສິນຄ້າ!");return;}
   const cf=getCF();
   cart.forEach(it=>Object.assign(it,{customerName:cf.cName,customerPhone:cf.cPhone,customerAddr:cf.cAddr,shipping:cf.cShip}));
-  showLoading("ກຳລັງບັນທຶກ...");
+  const submitBtn=document.querySelector("#cart-box .btn:last-child");
+  if(submitBtn){submitBtn.disabled=true;submitBtn.innerHTML='<span class="mini-spin"></span>ບັນທຶກ...';}
   try{const res=await api.post("recordBulkSale",{cart});showToast("ok","ສຳເລັດ!",res.message);cart=[];renderCart();loadSelect();loadDash();}
-  catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}
+  catch(e){showToast("err","ຜິດພາດ!",e.message);}
+  finally{if(submitBtn){submitBtn.disabled=false;submitBtn.innerHTML='✅ ບັນທຶກ';}}
 }
 function printReceipt(){
   const cf=getCF();
@@ -1141,11 +1155,10 @@ function setRepRange(range){
   loadReport();
 }
 async function loadReport(){
-  document.getElementById("rep-bills").innerHTML='<div class="empty-state">⏳ ກຳລັງໂຫຼດ...</div>';
-  showLoading("ໂຫຼດລາຍງານ...");
+  document.getElementById("rep-bills").innerHTML='<div class="skel skel-row" style="height:50px;margin-bottom:6px"></div>'.repeat(4);
   try{allRepRows=await api.get("getReport");applyRepFilter();}
   catch(e){document.getElementById("rep-bills").innerHTML=`<div class="empty-state">❌ ${e.message}</div>`;}
-  finally{hideLoading();}
+  
 }
 function applyRepFilter(){
   const from=document.getElementById("rep-date-from").value,to=document.getElementById("rep-date-to").value;
@@ -1191,7 +1204,7 @@ function renderRepBillCards(rows){
 // ════════════════════════════════
 function previewPImg(){const u=document.getElementById("p-img").value.trim();if(!u){showToast("warn","ກະລຸນາໃສ່ Link ຮູບ!");return;}document.getElementById("p-img-thumb").src=convertGD(u);document.getElementById("p-img-preview").style.display="block";}
 async function loadStk(){
-  showLoading("ໂຫຼດສະຕ໋ອກ...");
+  document.getElementById("stk-table").innerHTML='<div class="skel skel-row" style="height:40px;margin-bottom:6px"></div>'.repeat(3);
   try{
     const data=await api.get("getProducts");
     let h="<table><tr><th>ຮູບ / ຊື່</th><th>ທຶນ(₭)</th><th>ຂາຍ(₭)</th><th>ຄົງ</th><th>ຈັດການ</th></tr>";
@@ -1205,14 +1218,16 @@ async function loadStk(){
     });
     document.getElementById("stk-table").innerHTML=h+"</table>";
   }catch(e){document.getElementById("stk-table").innerHTML=`<div class="empty-state">❌ ${e.message}</div>`;}
-  finally{hideLoading();}
+  
 }
 async function saveP(){
   const n=document.getElementById("p-name").value.trim(),c=document.getElementById("p-cost").value,p=document.getElementById("p-price").value,q=document.getElementById("p-qty").value,img=document.getElementById("p-img").value.trim();
   if(!n||!q){showToast("warn","ກະລຸນາໃສ່ຊື່ ແລະ ຈຳນວນ!");return;}
-  showLoading("ກຳລັງບັນທຶກ...");
+  const btn=event&&event.target?event.target:null;
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="mini-spin"></span>ກຳລັງ...';}
   try{const res=await api.post("saveProduct",{name:n,cost:c,price:p,qty:q,imgUrl:img});showToast("ok","ສຳເລັດ!",res.message);["p-name","p-cost","p-price","p-qty","p-img"].forEach(id=>document.getElementById(id).value="");document.getElementById("p-img-preview").style.display="none";loadStk();loadSelect();}
-  catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}
+  catch(e){showToast("err","ຜິດພາດ!",e.message);}
+  finally{if(btn){btn.disabled=false;btn.innerHTML='💾 ບັນທຶກ';}}
 }
 function openStkModal(n,c,p,q,imgEnc,tab){
   curEditName=n;
@@ -1228,19 +1243,18 @@ function openStkModal(n,c,p,q,imgEnc,tab){
 }
 function switchTab(t){["edit","add","del"].forEach(k=>{document.getElementById("modal-tab-"+k).style.display=k===t?"block":"none";document.getElementById("tab-"+k).classList.toggle("active-tab",k===t);});}
 function previewModalImg(){const u=document.getElementById("modal-img").value.trim();if(u)document.getElementById("modal-img-preview").src=convertGD(u);}
-async function submitModalEdit(){const n=document.getElementById("modal-name").value.trim(),c=document.getElementById("modal-cost").value,p=document.getElementById("modal-price").value,q=document.getElementById("modal-qty").value,img=document.getElementById("modal-img").value.trim();showLoading("ແກ້ໄຂ...");try{const res=await api.post("editProductFull",{oldName:curEditName,newName:n,cost:c,price:p,qty:q,imgUrl:img});showToast("ok","ສຳເລັດ!",res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
-async function submitModalAdd(){const qty=document.getElementById("modal-add-qty").value;if(!qty||Number(qty)<=0){showToast("warn","ກະລຸນາໃສ່ຈຳນວນ!");return;}showLoading("ເຕີມ...");try{const res=await api.post("quickAddStock",{name:curEditName,qty});showToast("ok","ສຳເລັດ!",res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
-async function submitModalDel(){showLoading("ລຶບ...");try{const res=await api.post("deleteProduct",{name:curEditName});showToast("ok","ສຳເລັດ!",res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
+async function submitModalEdit(){const n=document.getElementById("modal-name").value.trim(),c=document.getElementById("modal-cost").value,p=document.getElementById("modal-price").value,q=document.getElementById("modal-qty").value,img=document.getElementById("modal-img").value.trim();try{const res=await api.post("editProductFull",{oldName:curEditName,newName:n,cost:c,price:p,qty:q,imgUrl:img});showToast("ok","ສຳເລັດ!",res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){showToast("err","ຜິດພາດ!",e.message);}}
+async function submitModalAdd(){const qty=document.getElementById("modal-add-qty").value;if(!qty||Number(qty)<=0){showToast("warn","ກະລຸນາໃສ່ຈຳນວນ!");return;}try{const res=await api.post("quickAddStock",{name:curEditName,qty});showToast("ok","ສຳເລັດ!",res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){showToast("err","ຜິດພາດ!",e.message);}}
+async function submitModalDel(){try{const res=await api.post("deleteProduct",{name:curEditName});showToast("ok","ສຳເລັດ!",res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){showToast("err","ຜິດພາດ!",e.message);}}
 
 // ════════════════════════════════
 // HISTORY
 // ════════════════════════════════
 async function loadHis(){
-  document.getElementById("his-content").innerHTML='<div class="empty-state">⏳ ກຳລັງໂຫຼດ...</div>';
-  showLoading("ໂຫຼດ...");
+  document.getElementById("his-content").innerHTML='<div class="skel skel-row" style="height:70px;margin-bottom:8px"></div>'.repeat(3);
   try{const res=await api.get("getHistory");hisAll=res;hisData={sales:res.sales.slice(),logs:res.logs.slice()};showHis(curH);}
   catch(e){document.getElementById("his-content").innerHTML=`<div class="empty-state">❌ ${e.message}</div>`;}
-  finally{hideLoading();}
+  
 }
 function applyHisFilter(){hisData={sales:filterHisRows(hisAll.sales),logs:filterHisRows(hisAll.logs)};renderHisItems(curH);}
 function clearHisFilter(){document.getElementById("his-date-filter").value="";document.getElementById("his-search").value="";hisData={sales:hisAll.sales.slice(),logs:hisAll.logs.slice()};renderHisItems(curH);}
@@ -1291,10 +1305,10 @@ function renderHisItems(t){
   });
   el.innerHTML=h;
 }
-async function editHisSale(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;showLoading("ແກ້ໄຂ...");try{const res=await api.post("editSaleRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
-async function delHisSale(r){if(!confirm("ລຶບ?"))return;showLoading("ລຶບ...");try{const res=await api.post("cancelSaleData",{dateStr:String(r[0]),name:r[1],qty:r[2]});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
-async function editHisStock(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;showLoading("ແກ້ໄຂ...");try{const res=await api.post("editStockRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
-async function delHisStock(r){if(!confirm("ລຶບ?"))return;showLoading("ລຶບ...");try{const res=await api.post("cancelStockRow",{dateStr:String(r[0]),name:r[1],qty:r[2]});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
+async function editHisSale(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;try{const res=await api.post("editSaleRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}}
+async function delHisSale(r){if(!confirm("ລຶບ?"))return;try{const res=await api.post("cancelSaleData",{dateStr:String(r[0]),name:r[1],qty:r[2]});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}}
+async function editHisStock(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;try{const res=await api.post("editStockRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}}
+async function delHisStock(r){if(!confirm("ລຶບ?"))return;try{const res=await api.post("cancelStockRow",{dateStr:String(r[0]),name:r[1],qty:r[2]});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}}
 
 // ════ TOAST NOTIFICATION ════
 function showToast(type,title,msg,ms){
@@ -1316,8 +1330,7 @@ function showToast(type,title,msg,ms){
 let allOrders = [], curStatusFilter = "";
 
 async function loadOrders() {
-  document.getElementById("orders-list").innerHTML = '<div class="empty-state">⏳ ກຳລັງໂຫຼດ...</div>';
-  showLoading("ໂຫຼດ Order...");
+  document.getElementById("orders-list").innerHTML = '<div class="skel skel-row" style="height:120px;margin-bottom:8px"></div>'.repeat(3);
   try {
     const res = await fetch(SHOP_CONFIG.orderApiUrl + "?action=getAllOrders", {method:"GET", redirect:"follow"});
     const text = await res.text();
@@ -1328,7 +1341,7 @@ async function loadOrders() {
     filterOrders();
   } catch(e) {
     document.getElementById("orders-list").innerHTML = `<div class="empty-state">❌ ${e.message}</div>`;
-  } finally { hideLoading(); }
+  } 
 }
 
 function setOrderDateToday() {
@@ -1416,7 +1429,7 @@ function renderOrders(orders) {
 
     // Status buttons
     const stBtns = statusDef.map(s=>`
-      <button class="${s.btnCls}${o.orderStatus===s.key?" current":""}" onclick="updateStatus('${code}','${s.key}')">${s.label}</button>
+      <button class="${s.btnCls}${o.orderStatus===s.key?" current":""}" onclick="updateStatus('${code}','${s.key}',this)">${s.label}</button>
     `).join("");
 
     h += `<div class="order-card">
@@ -1465,12 +1478,14 @@ function renderOrders(orders) {
 }
 
 
-async function updateStatus(code, newStatus) {
+async function updateStatus(code, newStatus, btnEl) {
   const ACCEPTED = "ແມ່ຄ້າຮັບຍອດແລ້ວ";
   const order    = allOrders.find(o => o.code === code);
   const wasAccepted = order && order.orderStatus === ACCEPTED;
   const willAccept  = newStatus === ACCEPTED;
 
+  const origTxt = btnEl ? btnEl.innerHTML : "";
+  if (btnEl) { btnEl.disabled=true; btnEl.innerHTML='<span class="mini-spin"></span>'; }
   // Confirm ຮັບຍອດ (ຈະຕັດສະຕ໋ອກ)
   if (willAccept && !wasAccepted) {
     if (!confirm(`✅ ຮັບຍອດ Order #${code}?
@@ -1478,7 +1493,6 @@ async function updateStatus(code, newStatus) {
 ລະບົບຈະ ຕັດສະຕ໋ອກ ອັດຕະໂນມັດ!`)) return;
   }
 
-  showLoading("ອັບເດດ...");
   try {
     // 1. Update order status
     const res  = await fetch(SHOP_CONFIG.orderApiUrl, {
@@ -1519,7 +1533,7 @@ async function updateStatus(code, newStatus) {
     filterOrders();
   } catch(e) {
     showToast("err","ຜິດພາດ!",e.message);
-  } finally { hideLoading(); }
+  } 
 }
 
 // Parse "kk1 ×1 (220,000 ₭)\nqq1 ×2 (100,000 ₭)"
@@ -1541,7 +1555,6 @@ function parseOrderItems(summary) {
 
 async function deleteOrderConfirm(code) {
   if (!confirm("ລຶບ Order #" + code + " ຈິງບໍ?")) return;
-  showLoading("ລຶບ...");
   try {
     const res = await fetch(SHOP_CONFIG.orderApiUrl, {
       method:"POST", redirect:"follow",
@@ -1556,7 +1569,7 @@ async function deleteOrderConfirm(code) {
     filterOrders();
   } catch(e) {
     showToast("err", "ຜິດພາດ!", e.message);
-  } finally { hideLoading(); }
+  } 
 }
 
 function viewImg(url, title) {
