@@ -211,26 +211,48 @@
 .bar-ok{background:var(--secondary);}.bar-err{background:var(--danger);}.bar-warn{background:var(--warning);}.bar-info{background:var(--blue);}
 
     /* ── ORDER PAGE ── */
-    .order-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px;margin-bottom:10px;}
-    .order-card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
-    .order-code{font-weight:bold;font-size:14px;color:var(--primary);}
-    .order-time{font-size:10px;color:var(--text-sub);}
-    .order-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;margin-bottom:8px;}
-    .order-info-label{color:var(--text-sub);}
-    .order-info-val{font-weight:bold;}
-    .order-items-box{background:rgba(var(--primary-rgb),.04);border-radius:6px;padding:7px 9px;font-size:11px;margin-bottom:8px;color:var(--text-sub);}
-    .order-total{font-size:14px;font-weight:bold;color:var(--primary);text-align:right;margin-bottom:8px;}
-    .order-actions{display:flex;gap:6px;flex-wrap:wrap;}
+    .order-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:13px;margin-bottom:10px;}
+    .order-card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+    .order-code{font-weight:bold;font-size:15px;color:var(--primary);}
+    .order-time{font-size:10px;color:var(--text-sub);margin-top:2px;}
+    .order-info-row{display:flex;align-items:baseline;gap:6px;font-size:12px;margin-bottom:5px;}
+    .order-lbl{color:var(--text-sub);font-size:11px;min-width:55px;flex-shrink:0;}
+    .order-val{font-weight:500;color:var(--text);}
+    .order-items-box{background:rgba(var(--primary-rgb),.05);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:7px 10px;font-size:11px;margin:8px 0;color:var(--text-sub);line-height:1.6;}
+    .order-total-row{display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px;font-size:13px;}
+    .order-total-amt{font-weight:bold;font-size:16px;color:var(--primary);}
+    /* Status buttons — 2 rows */
+    .status-btns{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px;}
+    .st-btn{border:none;border-radius:var(--radius-sm);padding:8px 4px;font-size:11px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;}
+    .st-wait{background:#fff3cd;color:#856404;border:1.5px solid #ffc107;}
+    .st-ok{background:#d1e7dd;color:#0a3622;border:1.5px solid #198754;}
+    .st-pack{background:#cfe2ff;color:#052c65;border:1.5px solid #0d6efd;}
+    .st-done{background:#e2d9f3;color:#3d1a6e;border:1.5px solid #6f42c1;}
+    .st-btn.current{opacity:1;box-shadow:0 0 0 2px rgba(0,0,0,.15);transform:scale(1.02);}
+    .st-btn:not(.current){opacity:.65;}
+    /* slip area */
+    .slip-area{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.02);border-radius:8px;padding:8px 10px;margin-bottom:8px;}
+    .slip-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1.5px solid var(--border);cursor:pointer;flex-shrink:0;}
+    .slip-label{font-size:11px;color:var(--text-sub);flex:1;}
+    .slip-upload-btn{font-size:11px;padding:6px 10px;border:1.5px solid var(--primary);border-radius:20px;background:none;color:var(--primary);cursor:pointer;font-weight:bold;white-space:nowrap;}
+    .order-del-btn{width:100%;padding:6px;border:none;border-radius:var(--radius-sm);background:rgba(231,76,60,.08);color:var(--danger);font-size:11px;cursor:pointer;margin-top:2px;}
+    /* Status pill */
     .status-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:bold;}
-    .sp-wait{background:rgba(243,156,18,.12);color:var(--warning);}
-    .sp-ok{background:rgba(51,153,114,.12);color:var(--primary);}
-    .sp-pack{background:rgba(52,152,219,.12);color:var(--blue);}
-    .sp-done{background:rgba(46,204,113,.12);color:var(--secondary);}
-    .slip-thumb{width:44px;height:44px;object-fit:cover;border-radius:6px;border:1.5px solid var(--border);cursor:pointer;flex-shrink:0;}
-    .order-filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+    .sp-wait{background:#fff3cd;color:#856404;}
+    .sp-ok{background:#d1e7dd;color:#0a3622;}
+    .sp-pack{background:#cfe2ff;color:#052c65;}
+    .sp-done{background:#e2d9f3;color:#3d1a6e;}
+    /* Filters */
+    .order-filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
     .filter-btn{padding:5px 12px;border-radius:20px;font-size:11px;border:1.5px solid var(--border);cursor:pointer;background:var(--card-bg);color:var(--text);}
     .filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
-    .order-search{flex:1;min-width:140px;padding:7px 12px;border:1px solid var(--border);border-radius:20px;font-size:12px;background:var(--input-bg);color:var(--text);}
+    .order-search{flex:1;min-width:130px;padding:7px 12px;border:1px solid var(--border);border-radius:20px;font-size:12px;background:var(--input-bg);color:var(--text);}
+    .order-date-row{display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap;}
+    .order-date-inp{flex:1;min-width:130px;padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;background:var(--input-bg);color:var(--text);}
+    .order-summary-bar{background:rgba(var(--primary-rgb),.07);border-radius:8px;padding:8px 12px;font-size:12px;margin-bottom:8px;display:flex;gap:16px;flex-wrap:wrap;}
+    .order-sum-item{display:flex;flex-direction:column;align-items:center;}
+    .order-sum-val{font-weight:bold;font-size:16px;color:var(--primary);}
+    .order-sum-lbl{font-size:10px;color:var(--text-sub);}
 
   
     /* ── ORDER NOTIFICATION ── */
@@ -546,17 +568,32 @@
 ════════════════════════════════════════ -->
 <div id="page6" class="page">
   <div class="card" style="padding-bottom:6px">
-    <h3>📋 ອໍເດີລູກຄ້າ</h3>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 style="margin:0;border:none;padding:0">📋 ອໍເດີລູກຄ້າ</h3>
+      <button class="btn btn-blue" style="padding:7px 12px;font-size:11px" onclick="printAllOrders()">🖨️ ພີ່ມທັງໝົດ</button>
+    </div>
+    <div class="order-date-row">
+      <input type="date" class="order-date-inp" id="order-date" onchange="filterOrders()">
+      <button class="btn btn-gray" style="padding:7px 12px;font-size:11px" onclick="clearDateFilter()">ທຸກວັນ</button>
+      <button class="btn" style="padding:7px 12px;font-size:11px" onclick="setOrderDateToday()">ມື້ນີ້</button>
+      <button class="btn btn-blue" style="padding:7px 12px;font-size:11px" onclick="loadOrders()">🔄 ໂຫຼດ</button>
+    </div>
+    <div id="order-summary-bar" class="order-summary-bar" style="display:none">
+      <div class="order-sum-item"><div class="order-sum-val" id="os-total">0</div><div class="order-sum-lbl">ທັງໝົດ</div></div>
+      <div class="order-sum-item"><div class="order-sum-val" id="os-wait" style="color:var(--warning)">0</div><div class="order-sum-lbl">ລໍຖ້າ</div></div>
+      <div class="order-sum-item"><div class="order-sum-val" id="os-done" style="color:var(--secondary)">0</div><div class="order-sum-lbl">ສ່ງແລ້ວ</div></div>
+      <div class="order-sum-item"><div class="order-sum-val" id="os-amount" style="color:var(--primary)">0₭</div><div class="order-sum-lbl">ຍອດ</div></div>
+    </div>
     <div class="order-filter-row">
-      <input type="text" class="order-search" id="order-search" placeholder="🔍 ຄົ້ນຫາ ຊື່/ເບີ/ລະຫັດ..." oninput="filterOrders()">
+      <input type="text" class="order-search" id="order-search" placeholder="🔍 ຊື່/ເບີ/ລະຫັດ..." oninput="filterOrders()">
       <button class="filter-btn active" onclick="filterByStatus('',this)">ທັງໝົດ</button>
-      <button class="filter-btn" onclick="filterByStatus('ລໍຖ້າຮັບຍອດ',this)">⏳ ໃໝ່</button>
-      <button class="filter-btn" onclick="filterByStatus('ແມ່ຄ້າຮັບຍອດແລ້ວ',this)">✅ ຮັບຍອດ</button>
-      <button class="filter-btn" onclick="filterByStatus('ກຳລັງກຽມການຈັດສົ່ງ',this)">📦 ກຽມສົ່ງ</button>
-      <button class="filter-btn" onclick="filterByStatus('ຈັດສົ່ງສຳເລັດ',this)">🎉 ສົ່ງແລ້ວ</button>
+      <button class="filter-btn" onclick="filterByStatus('ລໍຖ້າຮັບຍອດ',this)">ໃໝ່</button>
+      <button class="filter-btn" onclick="filterByStatus('ແມ່ຄ້າຮັບຍອດແລ້ວ',this)">ຮັບຍອດ</button>
+      <button class="filter-btn" onclick="filterByStatus('ກຳລັງກຽມການຈັດສົ່ງ',this)">ກຽມສົ່ງ</button>
+      <button class="filter-btn" onclick="filterByStatus('ຈັດສົ່ງສຳເລັດ',this)">ສ່ງແລ້ວ</button>
     </div>
     <div id="order-count" style="font-size:11px;color:var(--text-sub);margin-bottom:8px"></div>
-    <div id="orders-list"><div class="empty-state">⏳ ກົດ "ໂຫຼດ" ເພື່ອດຶງຂໍ້ມູນ</div></div>
+    <div id="orders-list"><div class="empty-state">ກົດ 🔄 ໂຫຼດ ຫຼື ເລືອກວັນທີ</div></div>
   </div>
 </div>
 
@@ -1294,9 +1331,33 @@ async function loadOrders() {
   } finally { hideLoading(); }
 }
 
+function setOrderDateToday() {
+  const t = new Date();
+  document.getElementById("order-date").value = `${t.getFullYear()}-${pad2(t.getMonth()+1)}-${pad2(t.getDate())}`;
+  filterOrders();
+}
+function clearDateFilter() {
+  document.getElementById("order-date").value = "";
+  filterOrders();
+}
+
 function filterOrders() {
-  const q = (document.getElementById("order-search").value || "").toLowerCase().trim();
+  const q    = (document.getElementById("order-search").value || "").toLowerCase().trim();
+  const date = document.getElementById("order-date").value || "";
   let filtered = allOrders;
+
+  // Date filter
+  if (date) {
+    filtered = filtered.filter(o => {
+      const t = String(o.submittedAt||o.dateIso||"");
+      // submittedAt format: dd/MM/yyyy HH:mm OR dateIso: yyyy-MM-dd
+      if (/\d{4}-\d{2}-\d{2}/.test(t)) return t.startsWith(date);
+      // dd/MM/yyyy
+      const m = t.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+      if (m) return `${m[3]}-${m[2]}-${m[1]}` === date;
+      return false;
+    });
+  }
   if (curStatusFilter) filtered = filtered.filter(o => o.orderStatus === curStatusFilter);
   if (q) filtered = filtered.filter(o =>
     (o.customerName||"").toLowerCase().includes(q) ||
@@ -1304,7 +1365,8 @@ function filterOrders() {
     (o.code||"").toLowerCase().includes(q) ||
     (o.itemsSummary||"").toLowerCase().includes(q)
   );
-  document.getElementById("order-count").textContent = filtered.length + " ລາຍການ";
+  const label = date ? `ວັນທີ ${date}` : "ທັງໝົດ";
+  document.getElementById("order-count").textContent = `${filtered.length} ລາຍການ (${label})`;
   renderOrders(filtered);
 }
 
@@ -1319,79 +1381,162 @@ function renderOrders(orders) {
   const el = document.getElementById("orders-list");
   if (!orders.length) { el.innerHTML = '<div class="empty-state">ບໍ່ມີ Order</div>'; return; }
 
-  const statusMap = {
-    "ລໍຖ້າຮັບຍອດ":       { cls:"sp-wait", emoji:"⏳" },
-    "ແມ່ຄ້າຮັບຍອດແລ້ວ": { cls:"sp-ok",   emoji:"✅" },
-    "ກຳລັງກຽມການຈັດສົ່ງ":{ cls:"sp-pack", emoji:"📦" },
-    "ຈັດສົ່ງສຳເລັດ":     { cls:"sp-done", emoji:"🎉" },
-  };
+  // Summary bar
+  const sb = document.getElementById("order-summary-bar");
+  sb.style.display = "flex";
+  document.getElementById("os-total").textContent  = orders.length;
+  document.getElementById("os-wait").textContent   = orders.filter(o=>o.orderStatus==="ລໍຖ້າຮັບຍອດ").length;
+  document.getElementById("os-done").textContent   = orders.filter(o=>o.orderStatus==="ຈັດສົ່ງສຳເລັດ").length;
+  const totalAmt = orders.reduce((s,o)=>s+(Number(o.totalAmount)||0),0);
+  document.getElementById("os-amount").textContent = fN(totalAmt)+"₭";
+
+  const statusDef = [
+    {key:"ລໍຖ້າຮັບຍອດ",       pill:"sp-wait", label:"⏳ ລໍຖ້າ",  btnCls:"st-btn st-wait"},
+    {key:"ແມ່ຄ້າຮັບຍອດແລ້ວ",  pill:"sp-ok",   label:"✅ ຮັບຍອດ", btnCls:"st-btn st-ok"},
+    {key:"ກຳລັງກຽມການຈັດສົ່ງ", pill:"sp-pack", label:"📦 ກຽມສົ່ງ",btnCls:"st-btn st-pack"},
+    {key:"ຈັດສົ່ງສຳເລັດ",      pill:"sp-done", label:"🎉 ສ່ງແລ້ວ", btnCls:"st-btn st-done"},
+  ];
+  const pillMap = {};
+  statusDef.forEach(s=>{ pillMap[s.key]={pill:s.pill,label:s.label}; });
 
   let h = "";
   orders.forEach(o => {
-    const st = statusMap[o.orderStatus] || { cls:"sp-wait", emoji:"❓" };
+    const cur = pillMap[o.orderStatus] || {pill:"sp-wait",label:"❓"};
+    const code = (o.code||"").replace(/'/g,"\'");
+
+    // Slip area
     const slipHtml = o.slipUrl
-      ? `<img class="slip-thumb" src="${driveThumb(o.slipUrl,80)}" onclick="viewImg('${o.slipUrl}','ສະລິບ')" onerror="this.style.display='none'">`
-      : `<span style="font-size:11px;color:${o.slipStatus==='✅ ມີ'?'var(--secondary)':'var(--danger)'}">${o.slipStatus||'❌ ບໍ່ມີ Slip'}</span>`;
+      ? `<img class="slip-thumb" src="${driveThumb(o.slipUrl,80)}" onclick="viewImg('${o.slipUrl}','ສະລິບ')" onerror="this.style.display='none'" title="ເບິ່ງ Slip">`
+      : `<span style="font-size:18px">${o.slipStatus==="✅ ມີ"?"✅":"❌"}</span>`;
+
+    // Shipbill area
     const shipBillHtml = o.shippingBillUrl
-      ? `<button class="btn btn-blue" style="font-size:10px;padding:5px 8px" onclick="viewImg('${o.shippingBillUrl}','ບິນຂົນສົ່ງ')">📤 ບິນສົ່ງ</button>`
-      : "";
-    const code = (o.code||"").replace(/'/g, "\'");
+      ? `<img class="slip-thumb" src="${driveThumb(o.shippingBillUrl,80)}" onclick="viewImg('${o.shippingBillUrl}','ບິນຂົນສົ່ງ')" onerror="this.style.display='none'" title="ເບິ່ງບິນຂົນສົ່ງ">`
+      : `<button class="slip-upload-btn" onclick="uploadShipBill('${code}')">📤 ອັບບິນ</button>`;
+
+    // Status buttons
+    const stBtns = statusDef.map(s=>`
+      <button class="${s.btnCls}${o.orderStatus===s.key?" current":""}" onclick="updateStatus('${code}','${s.key}')">${s.label}</button>
+    `).join("");
+
     h += `<div class="order-card">
       <div class="order-card-hdr">
         <div>
           <div class="order-code">#${o.code||"-"}</div>
           <div class="order-time">🕐 ${o.submittedAt||"-"}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          ${slipHtml}
-          <span class="status-pill ${st.cls}">${st.emoji} ${o.orderStatus||"?"}</span>
+        <span class="status-pill ${cur.pill}">${cur.label}</span>
+      </div>
+
+      <div class="order-info-row"><span class="order-lbl">👤 ຊື່</span><span class="order-val">${o.customerName||"-"}</span></div>
+      <div class="order-info-row"><span class="order-lbl">📞 ເບີ</span><span class="order-val"><a href="${waLink(o.customerPhone)}" target="_blank" style="color:var(--primary);font-weight:bold">${o.customerPhone||"-"}</a></span></div>
+      <div class="order-info-row"><span class="order-lbl">📍 ທີ່ຢູ່</span><span class="order-val">${o.customerAddr||"-"}</span></div>
+      <div class="order-info-row"><span class="order-lbl">🚚 ຂົນສົ່ງ</span><span class="order-val">${o.shipping||"-"}</span></div>
+      <div class="order-info-row"><span class="order-lbl">💳 ຊຳລະ</span><span class="order-val">${o.payment||"-"}</span></div>
+      ${o.note?`<div class="order-info-row"><span class="order-lbl">📝 ໝາຍ</span><span class="order-val">${o.note}</span></div>`:""}
+
+      <div class="order-items-box">${(o.itemsSummary||"-").replace(/\n/g,"<br>")}</div>
+
+      <div class="order-total-row">
+        <div style="display:flex;gap:10px;align-items:center">
+          <div>
+            <div style="font-size:10px;color:var(--text-sub)">Slip ໂອນ</div>
+            <div style="display:flex;align-items:center;gap:5px;margin-top:3px">${slipHtml}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-sub)">ບິນຂົນສົ່ງ</div>
+            <div style="display:flex;align-items:center;gap:5px;margin-top:3px">${shipBillHtml}</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--text-sub);text-align:right">ລວມ</div>
+          <div class="order-total-amt">${fN(o.totalAmount||0)} ₭</div>
         </div>
       </div>
-      <div class="order-info-grid">
-        <span class="order-info-label">👤 ຊື່</span><span class="order-info-val">${o.customerName||"-"}</span>
-        <span class="order-info-label">📞 ເບີ</span><span class="order-info-val">
-          <a href="${waLink(o.customerPhone)}" target="_blank" style="color:var(--primary)">${o.customerPhone||"-"}</a>
-        </span>
-        <span class="order-info-label">📍 ທີ່ຢູ່</span><span class="order-info-val">${o.customerAddr||"-"}</span>
-        <span class="order-info-label">🚚 ຂົນສົ່ງ</span><span class="order-info-val">${o.shipping||"-"}</span>
-        <span class="order-info-label">💳 ຊຳລະ</span><span class="order-info-val">${o.payment||"-"}</span>
-        ${o.note ? `<span class="order-info-label">📝 ໝາຍເຫດ</span><span class="order-info-val">${o.note}</span>` : ""}
-      </div>
-      <div class="order-items-box">${(o.itemsSummary||"-").replace(/\n/g,"<br>")}</div>
-      <div class="order-total">💰 ລວມ: ${fN(o.totalAmount||0)} ₭</div>
-      <div class="order-actions">
-        <button class="btn" style="flex:1;font-size:11px;padding:7px;background:var(--primary)" onclick="updateStatus('${code}','ລໍຖ້າຮັບຍອດ')">⏳ ໃໝ່</button>
-        <button class="btn" style="flex:1;font-size:11px;padding:7px;background:var(--secondary)" onclick="updateStatus('${code}','ແມ່ຄ້າຮັບຍອດແລ້ວ')">✅ ຮັບຍອດ</button>
-        <button class="btn" style="flex:1;font-size:11px;padding:7px;background:var(--blue)" onclick="updateStatus('${code}','ກຳລັງກຽມການຈັດສົ່ງ')">📦 ກຽມສົ່ງ</button>
-        <button class="btn" style="flex:1;font-size:11px;padding:7px;background:#8e44ad" onclick="updateStatus('${code}','ຈັດສົ່ງສຳເລັດ')">🎉 ສົ່ງແລ້ວ</button>
-        ${shipBillHtml}
-        <button class="btn" style="font-size:11px;padding:7px;background:#8e44ad" onclick="uploadShipBill('${code}')">📤 ອັບບິນ</button>
-        <button class="btn btn-dang" style="font-size:11px;padding:7px" onclick="deleteOrderConfirm('${code}')">🗑️</button>
+
+      <div class="status-btns">${stBtns}</div>
+      <div style="display:flex;gap:5px">
+        <button class="order-del-btn" style="flex:1" onclick="deleteOrderConfirm('${code}')">🗑️ ລຶບ</button>
+        <button class="order-del-btn" style="flex:1;color:var(--blue);border-color:rgba(52,152,219,.2);background:rgba(52,152,219,.05)" onclick="printSingleOrder('${code}')">🖨️ ພີ່ມ</button>
       </div>
     </div>`;
   });
   el.innerHTML = h;
 }
 
+
 async function updateStatus(code, newStatus) {
+  const ACCEPTED = "ແມ່ຄ້າຮັບຍອດແລ້ວ";
+  const order    = allOrders.find(o => o.code === code);
+  const wasAccepted = order && order.orderStatus === ACCEPTED;
+  const willAccept  = newStatus === ACCEPTED;
+
+  // Confirm ຮັບຍອດ (ຈະຕັດສະຕ໋ອກ)
+  if (willAccept && !wasAccepted) {
+    if (!confirm(`✅ ຮັບຍອດ Order #${code}?
+
+ລະບົບຈະ ຕັດສະຕ໋ອກ ອັດຕະໂນມັດ!`)) return;
+  }
+
   showLoading("ອັບເດດ...");
   try {
-    const res = await fetch(SHOP_CONFIG.orderApiUrl, {
+    // 1. Update order status
+    const res  = await fetch(SHOP_CONFIG.orderApiUrl, {
       method:"POST", redirect:"follow",
       headers:{"Content-Type":"text/plain"},
       body: JSON.stringify({action:"updateOrderStatus", code, status: newStatus})
     });
-    const text = await res.text();
-    const json = JSON.parse(text);
+    const json = JSON.parse(await res.text());
     if (json.status === "error") throw new Error(json.message);
-    showToast("ok", "ອັບເດດສຳເລັດ!", "#" + code + " → " + newStatus);
-    // Update local
+
+    // 2. ຖ້າ ACCEPT → ຕັດສະຕ໋ອກ Backend
+    if (willAccept && !wasAccepted && order) {
+      try {
+        const items = parseOrderItems(order.itemsSummary || "");
+        if (items.length) {
+          const cart = items.map(it => ({
+            name: it.name, qty: it.qty, price: it.price,
+            discount:0, note:"",
+            customerName: order.customerName||"",
+            customerPhone: order.customerPhone||"",
+            customerAddr: order.customerAddr||"",
+            shipping: order.shipping||""
+          }));
+          await api.post("recordBulkSale", {cart});
+          showToast("ok","ຮັບຍອດ + ຕັດສະຕ໋ອກສຳເລັດ!","#"+code);
+        } else {
+          showToast("ok","ຮັບຍອດສຳເລັດ!","#"+code+" (ຕັດສະຕ໋ອກດ້ວຍຕົນເອງ)");
+        }
+      } catch(e2) {
+        showToast("warn","ຮັບຍອດສຳເລັດ ແຕ່ຕັດສະຕ໋ອກຜິດ!",e2.message);
+      }
+    } else {
+      showToast("ok","ອັບເດດສຳເລັດ!","#"+code+" → "+newStatus);
+    }
+
     const idx = allOrders.findIndex(o => o.code === code);
     if (idx >= 0) allOrders[idx].orderStatus = newStatus;
     filterOrders();
   } catch(e) {
-    showToast("err", "ຜິດພາດ!", e.message);
+    showToast("err","ຜິດພາດ!",e.message);
   } finally { hideLoading(); }
+}
+
+// Parse "kk1 ×1 (220,000 ₭)\nqq1 ×2 (100,000 ₭)"
+function parseOrderItems(summary) {
+  const items = [];
+  const lines = String(summary).split(/\n|,/);
+  lines.forEach(line => {
+    const m = line.trim().match(/^(.+?)\s*[×x](\d+)\s*\(([\d,]+)/);
+    if (m) {
+      items.push({
+        name:  m[1].trim(),
+        qty:   parseInt(m[2]),
+        price: parseInt(m[3].replace(/,/g,""))
+      });
+    }
+  });
+  return items;
 }
 
 async function deleteOrderConfirm(code) {
@@ -1545,6 +1690,62 @@ function toggleSound() {
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(initOrderPolling, 3000); // ລໍ 3 ວິ ຫຼັງ page load
 });
+
+
+// ════ PRINT FUNCTIONS ════
+function getPrintableOrder(order) {
+  return `
+    <div style="font-family:monospace;font-size:12px;padding:14px;border-bottom:1px dashed #ccc;margin-bottom:10px">
+      <div style="text-align:center;font-weight:bold;font-size:14px;margin-bottom:8px">📦 ${SHOP_CONFIG.shopName}</div>
+      <div>ລະຫັດ: <b>${order.code||'-'}</b></div>
+      <div>ວັນທີ: ${order.submittedAt||'-'}</div>
+      <hr style="border:none;border-top:1px dashed #ccc;margin:6px 0">
+      <div>👤 ${order.customerName||'-'}</div>
+      <div>📞 ${order.customerPhone||'-'}</div>
+      <div>📍 ${order.customerAddr||'-'}</div>
+      <div>🚚 ${order.shipping||'-'}</div>
+      <div>💳 ${order.payment||'-'}</div>
+      <hr style="border:none;border-top:1px dashed #ccc;margin:6px 0">
+      <div style="white-space:pre-line">${order.itemsSummary||'-'}</div>
+      <hr style="border:none;border-top:1px dashed #ccc;margin:6px 0">
+      <div style="font-weight:bold;font-size:14px;text-align:right">ລວມ: ${fN(order.totalAmount||0)} ₭</div>
+      <div style="text-align:center;margin-top:8px;color:#888;font-size:10px">ຂອບໃຈທີ່ໃຊ້ບໍລິການ 🙏</div>
+    </div>`;
+}
+
+function printSingleOrder(code) {
+  const order = allOrders.find(o=>o.code===code);
+  if (!order) return;
+  const win = window.open("","_blank","width=400,height=600");
+  win.document.write(`<html><body style="margin:0">${getPrintableOrder(order)}</body></html>`);
+  win.document.close();
+  win.print();
+}
+
+function printAllOrders() {
+  const q    = (document.getElementById("order-search").value||"").toLowerCase().trim();
+  const date = document.getElementById("order-date").value||"";
+  let orders = allOrders;
+  if (curStatusFilter) orders = orders.filter(o=>o.orderStatus===curStatusFilter);
+  if (date) orders = orders.filter(o=>{
+    const t=String(o.submittedAt||"");
+    const m=t.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+    return m ? `${m[3]}-${m[2]}-${m[1]}`===date : false;
+  });
+  if (q) orders = orders.filter(o=>(o.customerName||"").toLowerCase().includes(q)||(o.code||"").toLowerCase().includes(q));
+  if (!orders.length) { showToast("warn","ບໍ່ມີ Order!"); return; }
+
+  const total = orders.reduce((s,o)=>s+(Number(o.totalAmount)||0),0);
+  const summary = `<div style="font-family:monospace;font-size:12px;padding:14px;border-bottom:2px solid #333;margin-bottom:10px;text-align:center">
+    <div style="font-size:16px;font-weight:bold">${SHOP_CONFIG.shopName}</div>
+    <div>ສະຫຼຸບ ${date||'ທຸກວັນ'} — ${orders.length} ໃບ — ລວມ ${fN(total)} ₭</div>
+  </div>`;
+
+  const win = window.open("","_blank","width=420,height=700");
+  win.document.write(`<html><body style="margin:0">${summary}${orders.map(getPrintableOrder).join("")}</body></html>`);
+  win.document.close();
+  setTimeout(()=>win.print(),400);
+}
 
 </script>
 </body>
