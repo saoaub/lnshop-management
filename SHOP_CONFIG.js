@@ -13,61 +13,68 @@
 const SHOP_CONFIG = {
 
   // ─── 1. ຂໍ້ມູນຮ້ານ ────────────────────────────────────────────
-  shopName:   "LN SHOP ເສື້ອຜ້າສາວອວບ",                        // ✏️ ຊື່ຮ້ານ
-  slogan:     "ສິນຄ້າຄຸນນະພາບດີ · 👚ຂາຍເສື້ອຜ້າສາວອວບລາຄາຖືກ 60-100kg👚", // ✏️ ເສື້ອຜ້າ ສາວອວບ ງາມໆ
-  logoUrl: "https://drive.google.com/thumbnail?id=1GktXwL8rKFVdd_zzkfHGYLco7H9TN-GJ&sz=w200", // ✏️ Link ຮູບໂລໂກ້
+  shopName:   "SHOP NAME",                        // ✏️ ຊື່ຮ້ານ
+  slogan:     "ສິນຄ້າຄຸນນະພາບ · ຝາກສົ່ງທົ່ວລາວ", // ✏️ ສະໂລແກນ
+  logoUrl:    "https://i.postimg.cc/XXXXXXXX/LOGO.jpg", // ✏️ Link ຮູບໂລໂກ້
 
   // ─── 2. ຊ່ອງທາງຕິດຕໍ່ ─────────────────────────────────────────
-   phone:      "020 52344599",                       // ✏️ ເບີໂທ (ສຳລັບ WhatsApp)
-  whatsappLink: "https://wa.link/+8562052595299",         // ✏️ ລິງ WhatsApp
+  phone:      "02012345678",                       // ✏️ ເບີໂທ (ສຳລັບ WhatsApp)
+  whatsappLink: "https://wa.link/xxxxxxx",         // ✏️ ລິງ WhatsApp
 
   social: {
-    facebook:  { url: "https://www.facebook.com/profile.php?id=61552951381519" },
-    tiktok:    { url: "https://www.tiktok.com/@review_shopshop?_r=1&_t=ZS-97WXFZRMqUX" },
-whatsapp:  { url: "https://api.whatsapp.com/send/?phone=8562052344599&text&type=phone_number&app_absent=0" },
-whatsapp2: { url: "https://api.whatsapp.com/send/?phone=8562052654258&text&type=phone_number&app_absent=0" },
+    facebook:  { url: "https://www.facebook.com/yourpage", name: "Your Page" },
+    tiktok:    { url: "https://www.tiktok.com/@youraccount", name: "@youraccount" },
+    instagram: { url: "https://www.instagram.com/youraccount", name: "@youraccount" },
+    whatsapp:  { url: "https://wa.link/xxxxxxx", name: "02012345678" },
   },
 
   // ─── 3. ສີໂທນ ─────────────────────────────────────────────────
   // 💡 ປ່ຽນຊຸດສີທີ່ 1 ຊຸດດຽວ — ທຸກໜ້າຈະ update ໂດຍອັດຕະໂນມັດ
-  primaryColor:    "#FFBBDA",  // ✏️ ສີຫຼັກ (hex)
-  primaryColorRgb: "255,187,218", // ✏️ RGB ຂອງສີຫຼັກ (ຕ້ອງກົງກັນ)
-  secondaryColor:  "#ca9681",  // ✏️ ສີຮອງ
-  headerBgColor: "#FFBBDA",  // ✏️ ສີ Header (ໂດຍທົ່ວໄປ = primaryColor)
+  primaryColor:    "#339972",  // ✏️ ສີຫຼັກ (hex)
+  primaryColorRgb: "51,153,114", // ✏️ RGB ຂອງສີຫຼັກ (ຕ້ອງກົງກັນ)
+  secondaryColor:  "#2ecc71",  // ✏️ ສີຮອງ
+  headerBgColor:   "#339972",  // ✏️ ສີ Header (ໂດຍທົ່ວໄປ = primaryColor)
 
   // ─── 4. QR ການຊຳລະ ────────────────────────────────────────────
-  qrPaymentUrl: "https://drive.google.com/uc?export=view&id=1SkzdkJEzoyYVsB1DkiJ0dbq4Araeh20j",
+  qrPaymentUrl: "https://drive.google.com/uc?export=view&id=YOUR_QR_IMAGE_ID",
   // ✏️ ອັບໂຫຼດຮູບ QR ໃສ່ Google Drive → ເອົາ File ID ໃສ່ YOUR_QR_IMAGE_ID
 
   // ─── 5. API URLs (ຈາກ Google Apps Script) ─────────────────────
   // ❗ ຈາກ deploy Code_Backend.gs ໃນ Backend Sheet
-  backendApiUrl: "https://script.google.com/macros/s/AKfycbyDPR3ZWC91z386AIYNvyHtt8LpUpflX8xE59aR7rJ7XuoR59p7cJkCnWFrPNxvk8L_/exec",
+  backendApiUrl: "https://script.google.com/macros/s/YOUR_BACKEND_SCRIPT_ID/exec",
   // ❗ ຈາກ deploy Code_Order.gs ໃນ Customer Sheet
-  orderApiUrl:   "https://script.google.com/macros/s/AKfycbyODTho_7hiU1LzGTBKAhkXa_9GhYJwXMLxOAHaP9wq-eI6aXd1fkCgpOAO5ukn44ee/exec",
+  orderApiUrl:   "https://script.google.com/macros/s/YOUR_ORDER_SCRIPT_ID/exec",
 
   // ─── 6. Admin ──────────────────────────────────────────────────
-  adminPassword: "lnshop2026", // ✏️ ລະຫັດຜ່ານ Admin (ຄວນປ່ຽນ!)
+  adminPassword: "admin2025", // ✏️ ລະຫັດຜ່ານ Admin (ຄວນປ່ຽນ!)
 
   // ─── 7. ຂົນສົ່ງ (ສາມາດເພີ່ມ/ລຶບ ຫຼື ຢຸດຊົ່ວຄາວໄດ້) ────────────
   // suspended: true = ຢຸດຮັບຝາກຊົ່ວຄາວ
   shippingOptions: [
     { value: "ອານຸສິດ",   label: "✈️ ອານຸສິດ",   suspended: false },
     { value: "ຮຸ່ງອາລຸນ", label: "🚌 ຮຸ່ງອາລຸນ",  suspended: false },
-    { value: "ຢູ່ນິເທວ",      label: "🚚 ຢູ່ນິເທວ",       suspended: false },
+    { value: "ມີໄຊ",      label: "🚚 ມີໄຊ",       suspended: false },
   ],
 
   // ─── 8. ວິທີຊຳລະ ──────────────────────────────────────────────
- paymentOptions: [
-  { value: "ໂອນຈ່າຍ", icon: "💳", label: "ໂອນຈ່າຍ", desc: "ສະແກນ QR", requireSlip: true },
-  { value: "COD", icon: "💵", label: "COD (ຈ່າຍປາຍທາງ)", desc: "ສຳລັບ ອານຸສິດ", requireSlip: false },
-],
+  paymentOptions: [
+    {
+      value: "ໂອນຈ່າຍ",
+      icon:  "💳",
+      label: "ໂອນຈ່າຍ",
+      desc:  "ສະແກນ QR · ໂອນກ່ອນສົ່ງ",
+      requireSlip: true,
+    },
+    // ✏️ ເພີ່ມ COD ໄດ້ຖ້າຕ້ອງການ:
+    // { value: "COD", icon: "💵", label: "COD (ຈ່າຍປາຍທາງ)", desc: "ສຳລັບ ອານຸສິດ ເທົ່ານັ້ນ", requireSlip: false },
+  ],
 
   // ─── 9. Marquee / Ticker ──────────────────────────────────────
   marqueeItems: [
     "✅ ສິນຄ້າຕົງປົກ 100%",
     "🚚 ສົ່ງທຸກແຂວງ ທົ່ວລາວ",
     "💳 ຮັບໂອນ BCEL One ແລະ ທະນາຄານອື່ນໆ",
-    "📱 ສອບຖາມ WhatsApp ໄດ້ຕະຫຼອດນະ",
+    "📱 ສອບຖາມ WhatsApp ໄດ້ຕະຫຼອດ",
   ],
 
   // ─── 10. ແຂວງ/ເມືອງ (ລາວ) ─────────────────────────────────────
