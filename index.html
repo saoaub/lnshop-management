@@ -212,6 +212,23 @@
 @keyframes tbar{from{width:100%}to{width:0%}}
 .bar-ok{background:var(--secondary);}.bar-err{background:var(--danger);}.bar-warn{background:var(--warning);}.bar-info{background:var(--blue);}
 
+
+    /* ── LOGIN SCREEN ── */
+    #login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#ff9dc8,#FFBBDA 40%,#ffd6e8);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;}
+    .login-box{background:#fff;border-radius:24px;padding:32px 24px 28px;width:100%;max-width:360px;box-shadow:0 8px 40px rgba(255,105,180,.25);text-align:center;}
+    .login-logo{width:90px;height:90px;border-radius:50%;border:4px solid #FFBBDA;object-fit:cover;margin:0 auto 14px;display:block;box-shadow:0 4px 16px rgba(255,105,180,.3);}
+    .login-shop{font-size:18px;font-weight:800;color:#d63384;margin-bottom:4px;}
+    .login-sub{font-size:12px;color:#aaa;margin-bottom:24px;}
+    .login-label{font-size:12px;color:#888;text-align:left;display:block;margin-bottom:5px;font-weight:600;}
+    .login-input{width:100%;padding:12px 16px;border:2px solid #f0d6e8;border-radius:12px;font-size:15px;outline:none;margin-bottom:14px;transition:.2s;background:#fff8fc;}
+    .login-input:focus{border-color:#FFBBDA;box-shadow:0 0 0 3px rgba(255,187,218,.2);}
+    .login-btn{width:100%;padding:14px;background:linear-gradient(135deg,#d63384,#ff69b4);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:bold;cursor:pointer;letter-spacing:.5px;box-shadow:0 4px 14px rgba(214,51,132,.3);transition:.2s;}
+    .login-btn:active{transform:scale(.97);}
+    .login-btn:disabled{opacity:.6;cursor:not-allowed;}
+    .login-err{color:#d63384;font-size:12px;margin-top:-8px;margin-bottom:10px;text-align:left;display:none;}
+    .login-err.show{display:block;}
+    .login-footer{font-size:10px;color:#ccc;margin-top:16px;}
+
     /* ── ORDER PAGE ── */
     .order-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:13px;margin-bottom:10px;}
     .order-card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);}
@@ -277,6 +294,25 @@
   </style>
 </head>
 <body>
+
+<!-- ═══════════ LOGIN SCREEN ═══════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <img class="login-logo" src="" id="login-logo"
+      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22%3E%3Ccircle cx=%2240%22 cy=%2240%22 r=%2240%22 fill=%22%23FFBBDA%22/%3E%3Ctext x=%2250%25%22 y=%2256%25%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2224%22%3E🏪%3C/text%3E%3C/svg%3E'">
+    <div class="login-shop" id="login-shop-name">LN SHOP</div>
+    <div class="login-sub">ລະບົບຈັດການຮ້ານ | Admin Only</div>
+    <label class="login-label">🔐 ລະຫັດຜ່ານ</label>
+    <input type="password" class="login-input" id="login-pwd"
+      placeholder="ໃສ່ລະຫັດຜ່ານ..."
+      onkeydown="if(event.key==='Enter')doLogin()"
+      autocomplete="current-password">
+    <div class="login-err" id="login-err">❌ ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ!</div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">🔓 ເຂົ້າລະບົບ</button>
+    <div class="login-footer">LN SHOP Management System</div>
+  </div>
+</div>
+
 <div id="toast-wrap"></div>
 <input type="file" id="_shipbill_file" accept="image/*" style="display:none">
 <!-- ═══════════════════════════════════════
@@ -1822,6 +1858,83 @@ function printAllOrders() {
       showToast("err", "ອ່ານໄຟລ໌ຜິດ!", "ກະລຸນາລອງໃໝ່");
     };
     reader.readAsDataURL(file);
+  });
+})();
+
+
+// ════ LOGIN SYSTEM ════
+(function(){
+  const SESSION_KEY = "lnshop_admin_auth";
+  const SESSION_TTL = 8 * 60 * 60 * 1000; // 8 ຊົ່ວໂມງ
+
+  function isLoggedIn() {
+    try {
+      const d = JSON.parse(sessionStorage.getItem(SESSION_KEY) || "{}");
+      return d.auth && (Date.now() - d.time < SESSION_TTL);
+    } catch(e) { return false; }
+  }
+
+  function saveSession() {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({auth:true, time:Date.now()}));
+  }
+
+  window.doLogin = function() {
+    const pwd = document.getElementById("login-pwd").value;
+    const err = document.getElementById("login-err");
+    const btn = document.getElementById("login-btn");
+    err.classList.remove("show");
+
+    if (!pwd) {
+      err.textContent = "⚠️ ກະລຸນາໃສ່ລະຫັດຜ່ານ";
+      err.classList.add("show");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="mini-spin" style="border-top-color:#fff;border-color:rgba(255,255,255,.3)"></span>ກຳລັງກວດ...';
+
+    // Simulate small delay for UX
+    setTimeout(function() {
+      if (pwd === SHOP_CONFIG.adminPassword) {
+        saveSession();
+        document.getElementById("login-screen").style.opacity = "0";
+        document.getElementById("login-screen").style.transition = "opacity .4s";
+        setTimeout(function() {
+          document.getElementById("login-screen").style.display = "none";
+        }, 400);
+        showToast("ok", "ຍິນດີຕ້ອນຮັບ! 👋", SHOP_CONFIG.shopName);
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = "🔓 ເຂົ້າລະບົບ";
+        err.textContent = "❌ ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ!";
+        err.classList.add("show");
+        document.getElementById("login-pwd").value = "";
+        document.getElementById("login-pwd").focus();
+        // Shake animation
+        const box = document.querySelector(".login-box");
+        box.style.animation = "none";
+        box.style.transform = "translateX(-8px)";
+        setTimeout(()=>{ box.style.transition = "transform .4s cubic-bezier(.36,.07,.19,.97)"; box.style.transform = "translateX(0)"; },10);
+      }
+    }, 600);
+  };
+
+  // Check on load
+  document.addEventListener("DOMContentLoaded", function() {
+    // Set logo + name from config
+    if (typeof SHOP_CONFIG !== "undefined") {
+      document.getElementById("login-logo").src = SHOP_CONFIG.logoUrl || "";
+      document.getElementById("login-shop-name").textContent = SHOP_CONFIG.shopName || "Admin";
+    }
+
+    if (isLoggedIn()) {
+      document.getElementById("login-screen").style.display = "none";
+    } else {
+      // Hide main app until login
+      setTimeout(function(){
+        document.getElementById("login-pwd").focus();
+      }, 300);
+    }
   });
 })();
 
