@@ -15,7 +15,7 @@ const SHOP_CONFIG = {
   // ─── 1. ຂໍ້ມູນຮ້ານ ────────────────────────────────────────────
   shopName:   "LN SHOP ເສື້ອຜ້າສາວອວບ",                        // ✏️ ຊື່ຮ້ານ
   slogan:     "ສິນຄ້າຄຸນນະພາບດີ · 👚ຂາຍເສື້ອຜ້າສາວອວບລາຄາຖືກ 60-100kg👚", // ✏️ ເສື້ອຜ້າ ສາວອວບ ງາມໆ
-  logoUrl: "https://drive.google.com/uc?export=view&id=1GktXwL8rKFVdd_zzkfHGYLco7H9TN-GJ", // ✏️ Link ຮູບໂລໂກ້
+  logoUrl: "https://drive.google.com/thumbnail?id=1GktXwL8rKFVdd_zzkfHGYLco7H9TN-GJ&sz=w200", // ✏️ Link ຮູບໂລໂກ້
 
   // ─── 2. ຊ່ອງທາງຕິດຕໍ່ ─────────────────────────────────────────
    phone:      "020 52344599",                       // ✏️ ເບີໂທ (ສຳລັບ WhatsApp)
