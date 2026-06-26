@@ -278,6 +278,7 @@
 </head>
 <body>
 <div id="toast-wrap"></div>
+<input type="file" id="_shipbill_file" accept="image/*" style="display:none">
 <!-- ═══════════════════════════════════════
      HEADER
 ════════════════════════════════════════ -->
@@ -1426,7 +1427,7 @@ function renderOrders(orders) {
     // Shipbill area
     const shipBillHtml = o.shippingBillUrl
       ? `<img class="slip-thumb" src="${driveThumb(o.shippingBillUrl,80)}" onclick="viewImg('${o.shippingBillUrl}','ບິນຂົນສົ່ງ')" onerror="this.style.display='none'" title="ເບິ່ງບິນຂົນສົ່ງ">`
-      : `<button class="slip-upload-btn" data-upload-code="${code}" onclick="uploadShipBill('${code}')">📤 ອັບບິນ</button>`;
+      : `<button class="slip-upload-btn" data-upload-code="${code}">📤 ອັບບິນ</button>`;
 
     // Status buttons
     const stBtns = statusDef.map(s=>`
@@ -1760,6 +1761,69 @@ function printAllOrders() {
   win.document.close();
   setTimeout(()=>win.print(),400);
 }
+
+
+// ════ UPLOAD SHIPPING BILL ════
+(function(){
+  var _code = "";
+
+  // Event delegation — catch click on any .slip-upload-btn
+  document.addEventListener("click", function(e) {
+    var btn = e.target.closest(".slip-upload-btn[data-upload-code]");
+    if (!btn) return;
+    _code = btn.getAttribute("data-upload-code");
+    if (!_code) return;
+    (document.getElementById("_shipbill_file") || fileInputEl).click();
+  });
+
+  // Handle file selected - use event delegation too in case element not ready
+  var fileInputEl = document.getElementById("_shipbill_file");
+  if (!fileInputEl) {
+    fileInputEl = document.createElement("input");
+    fileInputEl.type = "file";
+    fileInputEl.id = "_shipbill_file";
+    fileInputEl.accept = "image/*";
+    fileInputEl.style.display = "none";
+    document.body.appendChild(fileInputEl);
+  }
+  fileInputEl.addEventListener("change", function() {
+    var file = this.files[0];
+    if (!file || !_code) return;
+    var code = _code;
+    this.value = ""; // reset
+
+    // Show uploading toast
+    showToast("info", "ກຳລັງອັບໂຫຼດ...", "ກະລຸນາລໍຖ້າ");
+
+    var reader = new FileReader();
+    reader.onload = async function(ev) {
+      try {
+        var res = await fetch(SHOP_CONFIG.orderApiUrl, {
+          method: "POST",
+          redirect: "follow",
+          headers: {"Content-Type": "text/plain"},
+          body: JSON.stringify({
+            action: "uploadShippingBill",
+            code: code,
+            shipBillBase64: ev.target.result
+          })
+        });
+        var text = await res.text();
+        var json = JSON.parse(text);
+        if (json.status === "error") throw new Error(json.message);
+        showToast("ok", "ອັບບິນຂົນສົ່ງສຳເລັດ!", "ລູກຄ້າຈະເຫັນທັນທີ");
+        // Reload orders after short delay
+        setTimeout(loadOrders, 800);
+      } catch(err) {
+        showToast("err", "ອັບໂຫຼດຜິດພາດ!", err.message);
+      }
+    };
+    reader.onerror = function() {
+      showToast("err", "ອ່ານໄຟລ໌ຜິດ!", "ກະລຸນາລອງໃໝ່");
+    };
+    reader.readAsDataURL(file);
+  });
+})();
 
 </script>
 </body>
