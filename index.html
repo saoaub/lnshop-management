@@ -3,7 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Management</title>
+  <title>LN SHOP ລະບົບຫຼັງບ້ານ</title>
+
+  <!-- Open Graph / WhatsApp preview -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://saoaub.github.io/lnshop-management/">
+  <meta property="og:title"       content="LN SHOP ລະບົບຫຼັງບ້ານ 🔐">
+  <meta property="og:description" content="ລະບົບຈັດການຮ້ານ LN SHOP · Admin Only">
+  <meta property="og:image"       content="https://drive.google.com/thumbnail?id=1GktXwL8rKFVdd_zzkfHGYLco7H9TN-GJ&sz=w600">
+  <meta property="og:image:width"  content="600">
+  <meta property="og:image:height" content="600">
+  <meta property="og:locale"      content="lo_LA">
+  <meta property="og:site_name"   content="LN SHOP">
+  <meta name="robots"             content="noindex, nofollow">
+  <link rel="icon" href="https://drive.google.com/thumbnail?id=1GktXwL8rKFVdd_zzkfHGYLco7H9TN-GJ&sz=w64" type="image/jpeg">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="SHOP_CONFIG.js"></script>
   <style>
@@ -906,7 +919,7 @@ async function saveBannerSettings(){
 function applyStoredSettings(){
   const s=getSettings();
   const sn=s.shopName||SHOP_CONFIG.shopName;
-  document.getElementById("shop-name-display").textContent=sn;document.title=sn;
+  document.getElementById("shop-name-display").textContent=sn;document.title=sn+' · ລະບົບຫຼັງບ້ານ';
   const logo=s.logoUrl||SHOP_CONFIG.logoUrl;
   document.getElementById("header-logo").src=logo;
   if(s.primaryColor) applyPrimary(s.primaryColor,false);
