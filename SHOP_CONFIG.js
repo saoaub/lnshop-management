@@ -1,72 +1,57 @@
 // ================================================================
-// ★★★ SHOP_CONFIG.js — ຕັ້ງຄ່າຮ້ານທັງໝົດທີ່ນີ້ ★★★
+// ★★★ SHOP_CONFIG.js — LN SHOP ເສື້ອຜ້າສາວອວບ ★★★
 // ================================================================
-// 📌 ວິທີໃຊ້:
-//   - ປ່ຽນຄ່າໃນ SHOP_CONFIG ລຸ່ມນີ້ຕາມຂໍ້ມູນຮ້ານຂອງລູກຄ້າ
-//   - ບໍ່ຕ້ອງແກ້ໄຂ HTML ຫຼື Code.gs ຫຍັງ — ທຸກຢ່າງດຶງຈາກໄຟລ໌ນີ້
-//
-// 📂 Deploy:
-//   - ວາງໄຟລ໌ນີ້ຄຽງຄູ່ index.html ໃນ GitHub repo ສ່ວນ shop
-//   - ວາງໃນ management repo ຄຽງ management.html ດ້ວຍ
+// 📂 Deploy: ວາງໄຟລ໌ນີ້ໃນ ທັງ 2 GitHub repos
+//   - lnshop-- (shop repo)
+//   - lnshop-management (management repo)
 // ================================================================
 
 const SHOP_CONFIG = {
 
   // ─── 1. ຂໍ້ມູນຮ້ານ ────────────────────────────────────────────
-  shopName:   "SHOP NAME",                        // ✏️ ຊື່ຮ້ານ
-  slogan:     "ສິນຄ້າຄຸນນະພາບ · ຝາກສົ່ງທົ່ວລາວ", // ✏️ ສະໂລແກນ
-  logoUrl:    "https://i.postimg.cc/XXXXXXXX/LOGO.jpg", // ✏️ Link ຮູບໂລໂກ້
+  shopName:   "LN SHOP ເສື້ອຜ້າສາວອວບ",
+  slogan:     "ສິນຄ້າຄຸນນະພາບດີ · 👚ຂາຍເສື້ອຜ້າສາວອວບລາຄາຖືກ 60-100kg👚",
+  logoUrl:    "https://drive.google.com/thumbnail?id=1GktXwL8rKFVdd_zzkfHGYLco7H9TN-GJ&sz=w200",
 
   // ─── 2. ຊ່ອງທາງຕິດຕໍ່ ─────────────────────────────────────────
-  phone:      "02012345678",                       // ✏️ ເບີໂທ (ສຳລັບ WhatsApp)
-  whatsappLink: "https://wa.link/xxxxxxx",         // ✏️ ລິງ WhatsApp
+  phone:        "020 52344599",
+  whatsappLink: "https://wa.link/+8562052595299",
 
   social: {
-    facebook:  { url: "https://www.facebook.com/yourpage", name: "Your Page" },
-    tiktok:    { url: "https://www.tiktok.com/@youraccount", name: "@youraccount" },
-    instagram: { url: "https://www.instagram.com/youraccount", name: "@youraccount" },
-    whatsapp:  { url: "https://wa.link/xxxxxxx", name: "02012345678" },
+    facebook:  { url: "https://www.facebook.com/profile.php?id=61552951381519",                              name: "LN SHOP" },
+    tiktok:    { url: "https://www.tiktok.com/@review_shopshop?_r=1&_t=ZS-97WXFZRMqUX",                     name: "@LN SHOP" },
+    whatsapp:  { url: "https://api.whatsapp.com/send/?phone=8562052344599&text&type=phone_number&app_absent=0", name: "020 52344599" },
+    whatsapp2: { url: "https://api.whatsapp.com/send/?phone=8562052654258&text&type=phone_number&app_absent=0", name: "020 52654258" },
   },
 
   // ─── 3. ສີໂທນ ─────────────────────────────────────────────────
-  // 💡 ປ່ຽນຊຸດສີທີ່ 1 ຊຸດດຽວ — ທຸກໜ້າຈະ update ໂດຍອັດຕະໂນມັດ
-  primaryColor:    "#339972",  // ✏️ ສີຫຼັກ (hex)
-  primaryColorRgb: "51,153,114", // ✏️ RGB ຂອງສີຫຼັກ (ຕ້ອງກົງກັນ)
-  secondaryColor:  "#2ecc71",  // ✏️ ສີຮອງ
-  headerBgColor:   "#339972",  // ✏️ ສີ Header (ໂດຍທົ່ວໄປ = primaryColor)
+  primaryColor:    "#FFBBDA",
+  primaryColorRgb: "255,187,218",
+  secondaryColor:  "#ca9681",
+  headerBgColor:   "#FFBBDA",
 
   // ─── 4. QR ການຊຳລະ ────────────────────────────────────────────
-  qrPaymentUrl: "https://drive.google.com/uc?export=view&id=YOUR_QR_IMAGE_ID",
-  // ✏️ ອັບໂຫຼດຮູບ QR ໃສ່ Google Drive → ເອົາ File ID ໃສ່ YOUR_QR_IMAGE_ID
+  qrPaymentUrl: "https://drive.google.com/thumbnail?id=1SkzdkJEzoyYVsB1DkiJ0dbq4Araeh20j&sz=w600",
 
-  // ─── 5. API URLs (ຈາກ Google Apps Script) ─────────────────────
-  // ❗ ຈາກ deploy Code_Backend.gs ໃນ Backend Sheet
-  backendApiUrl: "https://script.google.com/macros/s/YOUR_BACKEND_SCRIPT_ID/exec",
-  // ❗ ຈາກ deploy Code_Order.gs ໃນ Customer Sheet
-  orderApiUrl:   "https://script.google.com/macros/s/YOUR_ORDER_SCRIPT_ID/exec",
+  // ─── 5. API URLs ───────────────────────────────────────────────
+  backendApiUrl: "https://script.google.com/macros/s/AKfycbyDPR3ZWC91z386AIYNvyHtt8LpUpflX8xE59aR7rJ7XuoR59p7cJkCnWFrPNxvk8L_/exec",
+  orderApiUrl:   "https://script.google.com/macros/s/AKfycbyODTho_7hiU1LzGTBKAhkXa_9GhYJwXMLxOAHaP9wq-eI6aXd1fkCgpOAO5ukn44ee/exec",
 
   // ─── 6. Admin ──────────────────────────────────────────────────
-  adminPassword: "admin2025", // ✏️ ລະຫັດຜ່ານ Admin (ຄວນປ່ຽນ!)
+  adminPassword: "lnshop2026",
 
-  // ─── 7. ຂົນສົ່ງ (ສາມາດເພີ່ມ/ລຶບ ຫຼື ຢຸດຊົ່ວຄາວໄດ້) ────────────
-  // suspended: true = ຢຸດຮັບຝາກຊົ່ວຄາວ
+  // ─── 7. ຂົນສົ່ງ ────────────────────────────────────────────────
   shippingOptions: [
     { value: "ອານຸສິດ",   label: "✈️ ອານຸສິດ",   suspended: false },
     { value: "ຮຸ່ງອາລຸນ", label: "🚌 ຮຸ່ງອາລຸນ",  suspended: false },
-    { value: "ມີໄຊ",      label: "🚚 ມີໄຊ",       suspended: false },
+    { value: "ຢູ່ນິເທວ",  label: "🚚 ຢູ່ນິເທວ",   suspended: false },
+    { value: "ມີໄຊ",      label: "🏍️ ມີໄຊ",       suspended: false },
   ],
 
   // ─── 8. ວິທີຊຳລະ ──────────────────────────────────────────────
   paymentOptions: [
-    {
-      value: "ໂອນຈ່າຍ",
-      icon:  "💳",
-      label: "ໂອນຈ່າຍ",
-      desc:  "ສະແກນ QR · ໂອນກ່ອນສົ່ງ",
-      requireSlip: true,
-    },
-    // ✏️ ເພີ່ມ COD ໄດ້ຖ້າຕ້ອງການ:
-    // { value: "COD", icon: "💵", label: "COD (ຈ່າຍປາຍທາງ)", desc: "ສຳລັບ ອານຸສິດ ເທົ່ານັ້ນ", requireSlip: false },
+    { value: "ໂອນຈ່າຍ", icon: "💳", label: "ໂອນຈ່າຍ",              desc: "ສະແກນ QR",           requireSlip: true  },
+    { value: "COD",     icon: "💵", label: "COD (ຈ່າຍປາຍທາງ)",     desc: "ສຳລັບ ອານຸສິດ",      requireSlip: false },
   ],
 
   // ─── 9. Marquee / Ticker ──────────────────────────────────────
@@ -74,10 +59,10 @@ const SHOP_CONFIG = {
     "✅ ສິນຄ້າຕົງປົກ 100%",
     "🚚 ສົ່ງທຸກແຂວງ ທົ່ວລາວ",
     "💳 ຮັບໂອນ BCEL One ແລະ ທະນາຄານອື່ນໆ",
-    "📱 ສອບຖາມ WhatsApp ໄດ້ຕະຫຼອດ",
+    "📱 ສອບຖາມ WhatsApp ໄດ້ຕະຫຼອດນະ",
   ],
 
-  // ─── 10. ແຂວງ/ເມືອງ (ລາວ) ─────────────────────────────────────
+  // ─── 10. ແຂວງ/ເມືອງ ───────────────────────────────────────────
   districts: {
     "ວຽງຈັນ (ນະຄອນຫຼວງ)": ["ຈັນທະບູລີ","ໄຊເສດຖາ","ສີໂຄດຕະບອງ","ສີສັດຕະນາກ","ຫາດຊາຍຟອງ","ນາຊາຍທອງ","ໄຊທານີ","ສັງທອງ","ປາກງື່ມ"],
     "ວຽງຈັນ (ແຂວງ)": ["ໂພນໂຮງ","ທຸລະຄົມ","ກາສີ","ວັງວຽງ","ແມດ","ຫີນເຫີບ","ແກ້ວອຸດົມ","ເຟືອງ","ຊະນາຄາມ","ວຽງຄຳ","ໝື່ນ"],
@@ -100,76 +85,63 @@ const SHOP_CONFIG = {
   },
 
   // ─── 11. ຮູບແບບ UI ─────────────────────────────────────────────
-  defaultGridCols:  4,     // ຖັນສິນຄ້າ (management): 3, 4, 5, 6
-  fontSize:         14,    // ຂະໜາດຕົວໜັງສື (px)
-  borderRadius:     14,    // ຄວາມໂຄ້ງ (px)
-  timezone:         "Asia/Vientiane",
-  countryPrefix:    "85620", // ລະຫັດໂທລະສັບ (+856 + 20)
+  defaultGridCols: 2,
+  fontSize:        14,
+  borderRadius:    14,
+  timezone:        "Asia/Vientiane",
+  countryPrefix:   "85620",
 };
 
 // ================================================================
-// ★ applyShopConfig() — ໃຊ້ໃນທຸກໜ້າ HTML
-//   ເອີ້ນໃນ DOMContentLoaded ເພື່ອ apply ຂໍ້ມູນ/ສີ/ໂລໂກ
+// ★ applyShopConfig()
 // ================================================================
 function applyShopConfig() {
   const C = SHOP_CONFIG;
-
-  // --- ສີ ---
-  document.documentElement.style.setProperty("--primary",      C.primaryColor);
-  document.documentElement.style.setProperty("--primary-rgb",  C.primaryColorRgb);
-  document.documentElement.style.setProperty("--secondary",    C.secondaryColor);
-  document.documentElement.style.setProperty("--font-size-base", C.fontSize + "px");
-  document.documentElement.style.setProperty("--radius-lg",    C.borderRadius + "px");
-  document.documentElement.style.setProperty("--radius-md",    Math.max(0, C.borderRadius - 4) + "px");
-  document.documentElement.style.setProperty("--radius-sm",    Math.max(0, C.borderRadius - 8) + "px");
-  document.documentElement.style.setProperty("--grid-cols",    C.defaultGridCols);
-
-  // --- ຊື່ / ໂລໂກ ---
+  document.documentElement.style.setProperty("--primary",         C.primaryColor);
+  document.documentElement.style.setProperty("--primary-rgb",     C.primaryColorRgb);
+  document.documentElement.style.setProperty("--secondary",       C.secondaryColor);
+  document.documentElement.style.setProperty("--font-size-base",  C.fontSize + "px");
+  document.documentElement.style.setProperty("--radius-lg",       C.borderRadius + "px");
+  document.documentElement.style.setProperty("--radius-md",       Math.max(0, C.borderRadius - 4) + "px");
+  document.documentElement.style.setProperty("--radius-sm",       Math.max(0, C.borderRadius - 8) + "px");
+  document.documentElement.style.setProperty("--grid-cols",       C.defaultGridCols);
   document.querySelectorAll("[data-shop-name]").forEach(el => el.textContent = C.shopName);
   document.querySelectorAll("[data-shop-slogan]").forEach(el => el.textContent = C.slogan);
   document.querySelectorAll("[data-shop-logo]").forEach(el => el.src = C.logoUrl);
   document.title = C.shopName;
-
-  // --- Header Background ---
   document.querySelectorAll(".site-header, .header, #app-header").forEach(el => {
     el.style.background = C.headerBgColor;
   });
 }
 
 // ================================================================
-// ★ Utility Functions (ໃຊ້ຮ່ວມທຸກໜ້າ)
+// ★ Utility Functions
 // ================================================================
 function pad2(n) { return String(n).padStart(2, "0"); }
-
-function fN(n) { return Number(n || 0).toLocaleString(); }
+function fN(n)   { return Number(n || 0).toLocaleString(); }
 
 function toYMD(d) {
   if (!d) return "";
   const s = String(d).trim();
   if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0, 10);
   const dt = new Date(s);
-  if (!isNaN(dt)) return `${dt.getFullYear()}-${pad2(dt.getMonth() + 1)}-${pad2(dt.getDate())}`;
+  if (!isNaN(dt)) return `${dt.getFullYear()}-${pad2(dt.getMonth()+1)}-${pad2(dt.getDate())}`;
   return "";
 }
-
 function fmtDT(d) {
-  const ymd = toYMD(d);
-  if (!ymd) return "-";
+  const ymd = toYMD(d); if (!ymd) return "-";
   const [y, m, day] = ymd.split("-");
   return `${day}/${m}/${y}`;
 }
-
 function fmtDTFull(d) {
   if (!d) return "-";
   const s = String(d).trim();
   if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test(s)) {
-    const [y, m, day] = s.substring(0, 10).split("-");
-    const t = s.substring(11, 16);
-    return `${day}/${m}/${y} ${t}`;
+    const [y, m, day] = s.substring(0,10).split("-");
+    return `${day}/${m}/${y} ${s.substring(11,16)}`;
   }
   return fmtDT(s);
 }
-
 function convertGD(url) {
   if (!url || !url.trim()) return "";
   url = url.trim();
@@ -180,7 +152,6 @@ function convertGD(url) {
   if (m2) return `https://drive.google.com/thumbnail?id=${m2[1]}&sz=w300`;
   return url;
 }
-
 function driveFileId(url) {
   if (!url) return "";
   const m = String(url).match(/\/d\/([a-zA-Z0-9_-]{10,})/);
@@ -189,13 +160,11 @@ function driveFileId(url) {
   if (m2) return m2[1];
   return "";
 }
-
 function driveThumb(url, size) {
   const id = driveFileId(url);
   if (!id) return url || "";
   return `https://drive.google.com/thumbnail?id=${id}&sz=w${size || 400}`;
 }
-
 function toWaPhone(rawPhone) {
   const digits = String(rawPhone || "").replace(/\D/g, "");
   if (!digits) return "";
@@ -203,27 +172,19 @@ function toWaPhone(rawPhone) {
   const last8 = digits.length > 8 ? digits.slice(-8) : digits;
   return SHOP_CONFIG.countryPrefix + last8;
 }
-
 function waLink(rawPhone) {
   const p = toWaPhone(rawPhone);
   return p ? `https://wa.me/${p}` : "";
 }
-
 function escHtml(s) {
-  return String(s || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
 const noImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' fill='%23bbb' font-size='10'%3Eບໍ່ມີ%3C/text%3E%3C/svg%3E";
 
-// ─── LocalStorage Settings (Management page) ──────────────────
 const SETTINGS_KEY = "shoptemplate_v1";
 function getSettings() {
-  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; }
-  catch (e) { return {}; }
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch(e) { return {}; }
 }
 function saveSettings(o) { localStorage.setItem(SETTINGS_KEY, JSON.stringify(o)); }
 
@@ -231,19 +192,17 @@ function saveSettings(o) { localStorage.setItem(SETTINGS_KEY, JSON.stringify(o))
 const api = {
   async get(action, params = {}, useOrderApi = false) {
     const url = useOrderApi ? SHOP_CONFIG.orderApiUrl : SHOP_CONFIG.backendApiUrl;
-    const qs = new URLSearchParams({ action, ...params }).toString();
+    const qs  = new URLSearchParams({ action, ...params }).toString();
     const res = await fetch(`${url}?${qs}`, { method: "GET", redirect: "follow" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
     if (json.success === false) throw new Error(json.error || "API error");
     return json.data !== undefined ? json.data : json;
   },
-
   async post(action, body = {}, useOrderApi = false) {
     const url = useOrderApi ? SHOP_CONFIG.orderApiUrl : SHOP_CONFIG.backendApiUrl;
     const res = await fetch(url, {
-      method: "POST",
-      redirect: "follow",
+      method: "POST", redirect: "follow",
       headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ action, ...body }),
     });
