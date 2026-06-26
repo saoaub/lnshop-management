@@ -63,7 +63,7 @@
     .banner-arrows{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 8px;z-index:5;}
     .banner-arrow{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.45);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
     /* ── TICKER ── */
-    .ticker-wrap{width:100%;background:linear-gradient(90deg,#1a4a35,#339972 40%,#1a4a35);overflow:hidden;height:36px;display:flex;align-items:center;}
+    .ticker-wrap{width:100%;background:linear-gradient(90deg,#b5006b,#ff69b4 40%,#b5006b);overflow:hidden;height:36px;display:flex;align-items:center;}
     .ticker-label{flex-shrink:0;background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:700;padding:0 10px;height:100%;display:flex;align-items:center;}
     .ticker-body{flex:1;overflow:hidden;position:relative;height:100%;}
     .ticker-inner{display:flex;align-items:center;height:100%;position:absolute;white-space:nowrap;animation:tickerScroll 30s linear infinite;}
@@ -194,9 +194,24 @@
     .top5-slide.active{display:block;}
     .top5-img-wrap{width:150px;height:150px;margin:0 auto 9px;border-radius:12px;overflow:hidden;background:#f0f0f0;border:3px solid var(--primary);}
     .top5-img-wrap img{width:100%;height:100%;object-fit:cover;}
-  </style>
+  /* ── TOAST ── */
+#toast-wrap{position:fixed;top:16px;right:12px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{display:flex;align-items:flex-start;gap:10px;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;min-width:240px;max-width:300px;pointer-events:all;opacity:0;transform:translateX(40px);transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.toast.show{opacity:1;transform:translateX(0);}
+.toast.hide{opacity:0;transform:translateX(40px);}
+.toast-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;}
+.t-ok{background:rgba(46,204,113,.15);color:var(--secondary);}
+.t-err{background:rgba(231,76,60,.12);color:var(--danger);}
+.t-warn{background:rgba(243,156,18,.12);color:var(--warning);}
+.t-info{background:rgba(52,152,219,.12);color:var(--blue);}
+.toast-body{flex:1;}.toast-title{font-size:12px;font-weight:bold;color:var(--text);margin:0 0 2px;}.toast-msg{font-size:11px;color:var(--text-sub);margin:0;line-height:1.4;}
+.toast-bar{height:3px;position:absolute;bottom:0;left:0;animation:tbar 3s linear forwards;}
+@keyframes tbar{from{width:100%}to{width:0%}}
+.bar-ok{background:var(--secondary);}.bar-err{background:var(--danger);}.bar-warn{background:var(--warning);}.bar-info{background:var(--blue);}
+</style>
 </head>
 <body>
+<div id="toast-wrap"></div>
 <div id="api-loading"><div class="api-spinner"><div class="api-spinner-icon"></div><div class="api-spinner-text">ກຳລັງໂຫຼດ...</div></div></div>
 <!-- ═══════════════════════════════════════
      HEADER
@@ -686,12 +701,12 @@ async function loadBannerSettings(){
 }
 async function saveBannerSettings(){
   const txt=(document.getElementById("set-ticker-text").value||"").trim();
-  if(!txt){alert("ໃສ່ຂໍ້ຄວາມ!");return;}
+  if(!txt){showToast("warn","ກະລຸນາໃສ່ຂໍ້ຄວາມ!");return;}
   showLoading("ກຳລັງບັນທຶກ...");
   try{
     const res=await api.post("saveBannerSettings",{settings:{tickerText:txt}});
-    _savedTickerText=txt;renderTicker(txt,bannerItems);alert("✅ "+res.message);
-  }catch(e){alert("❌ "+e.message);}finally{hideLoading();}
+    _savedTickerText=txt;renderTicker(txt,bannerItems);showToast("ok","ສຳເລັດ!",res.message);
+  }catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}
 }
 
 // ════════════════════════════════
@@ -796,7 +811,7 @@ async function loadDash(){
     document.getElementById("ds-profit").textContent=fN(td.profit);
     renderTodayBills(td.rawRows||[]);
     computeTop5(data);
-  }catch(e){alert("❌ ໂຫຼດ Dashboard ບໍ່ສຳເລັດ: "+e.message);}
+  }catch(e){showToast("err","ໂຫຼດ Dashboard ບໍ່ສຳເລັດ!",e.message);}
   finally{hideLoading();}
 }
 function renderTodayBills(rows){
@@ -834,8 +849,8 @@ function openBillGroup(rows){
   document.getElementById("bill-modal-content").innerHTML=h;
   openModal("bill-modal");
 }
-async function editBillR(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;showLoading("ແກ້ໄຂ...");try{const res=await api.post("editSaleRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});alert(res.message);closeModal("bill-modal");loadDash();}catch(e){alert("❌ "+e.message);}finally{hideLoading();}}
-async function delBillR(r){if(!confirm("ລຶບ?"))return;showLoading("ລຶບ...");try{const res=await api.post("cancelSaleData",{dateStr:String(r[0]),name:r[1],qty:r[2]});alert(res.message);closeModal("bill-modal");loadDash();}catch(e){alert("❌ "+e.message);}finally{hideLoading();}}
+async function editBillR(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;showLoading("ແກ້ໄຂ...");try{const res=await api.post("editSaleRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});showToast("ok","ສຳເລັດ!",res.message);closeModal("bill-modal");loadDash();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
+async function delBillR(r){if(!confirm("ລຶບ?"))return;showLoading("ລຶບ...");try{const res=await api.post("cancelSaleData",{dateStr:String(r[0]),name:r[1],qty:r[2]});showToast("ok","ສຳເລັດ!",res.message);closeModal("bill-modal");loadDash();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
 function showDashDetail(date){
   const day=dashData[date];
   document.getElementById("dash-date-title").textContent="📅 "+date;
@@ -910,7 +925,7 @@ function renderProdGrid(prods){
   if(selectedProd) document.querySelectorAll(".prod-card").forEach(c=>{if(c.querySelector(".prod-name")?.textContent===selectedProd)c.classList.add("selected");});
 }
 function selectProd(name,qty){
-  if(qty<=0){alert("⚠️ ສິນຄ້ານີ້ໝົດ!");return;}
+  if(qty<=0){showToast("warn","ສິນຄ້ານີ້ໝົດ!");return;}
   if(selectedProd===name){selectedProd=null;document.querySelectorAll(".prod-card").forEach(c=>c.classList.remove("selected"));document.getElementById("sel-ctrl").classList.remove("visible");return;}
   selectedProd=name;
   document.querySelectorAll(".prod-card").forEach(c=>{c.classList.remove("selected");if(c.querySelector(".prod-name")?.textContent===name)c.classList.add("selected");});
@@ -928,7 +943,7 @@ function getCF(){
   return{cName:document.getElementById("c-name").value.trim(),cPhone:document.getElementById("c-phone").value.trim(),cAddr:[prov,addr].filter(Boolean).join(" - "),cShip:[shipType,branch].filter(Boolean).join(" ")};
 }
 function addToCart(){
-  if(!selectedProd){alert("ເລືອກສິນຄ້າກ່ອນ!");return;}
+  if(!selectedProd){showToast("warn","ກະລຸນາເລືອກສິນຄ້າກ່ອນ!");return;}
   const q=parseInt(document.getElementById("sel-qty").value)||1;
   const d=parseInt(document.getElementById("sel-disc").value)||0;
   const nt=document.getElementById("sel-note").value||"";
@@ -950,12 +965,12 @@ function renderCart(){
 function removeCart(i){cart.splice(i,1);renderCart();}
 function editCart(i){const it=cart[i];selectProd(it.name,999);document.getElementById("sel-qty").value=it.qty;document.getElementById("sel-disc").value=it.discount;cart.splice(i,1);renderCart();}
 async function submitSale(){
-  if(!cart.length){alert("ຍັງບໍ່ໄດ້ເພີ່ມ!");return;}
+  if(!cart.length){showToast("warn","ຍັງບໍ່ໄດ້ເພີ່ມສິນຄ້າ!");return;}
   const cf=getCF();
   cart.forEach(it=>Object.assign(it,{customerName:cf.cName,customerPhone:cf.cPhone,customerAddr:cf.cAddr,shipping:cf.cShip}));
   showLoading("ກຳລັງບັນທຶກ...");
-  try{const res=await api.post("recordBulkSale",{cart});alert(res.message);cart=[];renderCart();loadSelect();loadDash();}
-  catch(e){alert("❌ "+e.message);}finally{hideLoading();}
+  try{const res=await api.post("recordBulkSale",{cart});showToast("ok","ສຳເລັດ!",res.message);cart=[];renderCart();loadSelect();loadDash();}
+  catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}
 }
 function printReceipt(){
   const cf=getCF();
@@ -1028,7 +1043,7 @@ function renderRepBillCards(rows){
 // ════════════════════════════════
 // STOCK PAGE
 // ════════════════════════════════
-function previewPImg(){const u=document.getElementById("p-img").value.trim();if(!u){alert("ໃສ່ Link!");return;}document.getElementById("p-img-thumb").src=convertGD(u);document.getElementById("p-img-preview").style.display="block";}
+function previewPImg(){const u=document.getElementById("p-img").value.trim();if(!u){showToast("warn","ກະລຸນາໃສ່ Link ຮູບ!");return;}document.getElementById("p-img-thumb").src=convertGD(u);document.getElementById("p-img-preview").style.display="block";}
 async function loadStk(){
   showLoading("ໂຫຼດສະຕ໋ອກ...");
   try{
@@ -1048,10 +1063,10 @@ async function loadStk(){
 }
 async function saveP(){
   const n=document.getElementById("p-name").value.trim(),c=document.getElementById("p-cost").value,p=document.getElementById("p-price").value,q=document.getElementById("p-qty").value,img=document.getElementById("p-img").value.trim();
-  if(!n||!q){alert("ໃສ່ຊື່ ແລະ ຈຳນວນ!");return;}
+  if(!n||!q){showToast("warn","ກະລຸນາໃສ່ຊື່ ແລະ ຈຳນວນ!");return;}
   showLoading("ກຳລັງບັນທຶກ...");
-  try{const res=await api.post("saveProduct",{name:n,cost:c,price:p,qty:q,imgUrl:img});alert(res.message);["p-name","p-cost","p-price","p-qty","p-img"].forEach(id=>document.getElementById(id).value="");document.getElementById("p-img-preview").style.display="none";loadStk();loadSelect();}
-  catch(e){alert("❌ "+e.message);}finally{hideLoading();}
+  try{const res=await api.post("saveProduct",{name:n,cost:c,price:p,qty:q,imgUrl:img});showToast("ok","ສຳເລັດ!",res.message);["p-name","p-cost","p-price","p-qty","p-img"].forEach(id=>document.getElementById(id).value="");document.getElementById("p-img-preview").style.display="none";loadStk();loadSelect();}
+  catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}
 }
 function openStkModal(n,c,p,q,imgEnc,tab){
   curEditName=n;
@@ -1067,9 +1082,9 @@ function openStkModal(n,c,p,q,imgEnc,tab){
 }
 function switchTab(t){["edit","add","del"].forEach(k=>{document.getElementById("modal-tab-"+k).style.display=k===t?"block":"none";document.getElementById("tab-"+k).classList.toggle("active-tab",k===t);});}
 function previewModalImg(){const u=document.getElementById("modal-img").value.trim();if(u)document.getElementById("modal-img-preview").src=convertGD(u);}
-async function submitModalEdit(){const n=document.getElementById("modal-name").value.trim(),c=document.getElementById("modal-cost").value,p=document.getElementById("modal-price").value,q=document.getElementById("modal-qty").value,img=document.getElementById("modal-img").value.trim();showLoading("ແກ້ໄຂ...");try{const res=await api.post("editProductFull",{oldName:curEditName,newName:n,cost:c,price:p,qty:q,imgUrl:img});alert(res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){alert("❌ "+e.message);}finally{hideLoading();}}
-async function submitModalAdd(){const qty=document.getElementById("modal-add-qty").value;if(!qty||Number(qty)<=0){alert("ໃສ່ຈຳນວນ!");return;}showLoading("ເຕີມ...");try{const res=await api.post("quickAddStock",{name:curEditName,qty});alert(res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){alert("❌ "+e.message);}finally{hideLoading();}}
-async function submitModalDel(){showLoading("ລຶບ...");try{const res=await api.post("deleteProduct",{name:curEditName});alert(res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){alert("❌ "+e.message);}finally{hideLoading();}}
+async function submitModalEdit(){const n=document.getElementById("modal-name").value.trim(),c=document.getElementById("modal-cost").value,p=document.getElementById("modal-price").value,q=document.getElementById("modal-qty").value,img=document.getElementById("modal-img").value.trim();showLoading("ແກ້ໄຂ...");try{const res=await api.post("editProductFull",{oldName:curEditName,newName:n,cost:c,price:p,qty:q,imgUrl:img});showToast("ok","ສຳເລັດ!",res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
+async function submitModalAdd(){const qty=document.getElementById("modal-add-qty").value;if(!qty||Number(qty)<=0){showToast("warn","ກະລຸນາໃສ່ຈຳນວນ!");return;}showLoading("ເຕີມ...");try{const res=await api.post("quickAddStock",{name:curEditName,qty});showToast("ok","ສຳເລັດ!",res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
+async function submitModalDel(){showLoading("ລຶບ...");try{const res=await api.post("deleteProduct",{name:curEditName});showToast("ok","ສຳເລັດ!",res.message);closeModal("stk-modal");loadStk();loadSelect();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
 
 // ════════════════════════════════
 // HISTORY
@@ -1130,10 +1145,24 @@ function renderHisItems(t){
   });
   el.innerHTML=h;
 }
-async function editHisSale(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;showLoading("ແກ້ໄຂ...");try{const res=await api.post("editSaleRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});alert(res.message);loadHis();}catch(e){alert("❌ "+e.message);}finally{hideLoading();}}
-async function delHisSale(r){if(!confirm("ລຶບ?"))return;showLoading("ລຶບ...");try{const res=await api.post("cancelSaleData",{dateStr:String(r[0]),name:r[1],qty:r[2]});alert(res.message);loadHis();}catch(e){alert("❌ "+e.message);}finally{hideLoading();}}
-async function editHisStock(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;showLoading("ແກ້ໄຂ...");try{const res=await api.post("editStockRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});alert(res.message);loadHis();}catch(e){alert("❌ "+e.message);}finally{hideLoading();}}
-async function delHisStock(r){if(!confirm("ລຶບ?"))return;showLoading("ລຶບ...");try{const res=await api.post("cancelStockRow",{dateStr:String(r[0]),name:r[1],qty:r[2]});alert(res.message);loadHis();}catch(e){alert("❌ "+e.message);}finally{hideLoading();}}
+async function editHisSale(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;showLoading("ແກ້ໄຂ...");try{const res=await api.post("editSaleRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
+async function delHisSale(r){if(!confirm("ລຶບ?"))return;showLoading("ລຶບ...");try{const res=await api.post("cancelSaleData",{dateStr:String(r[0]),name:r[1],qty:r[2]});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
+async function editHisStock(r){const v=prompt("ຈຳນວນໃໝ່:",r[2]);if(!v)return;showLoading("ແກ້ໄຂ...");try{const res=await api.post("editStockRow",{dateStr:String(r[0]),name:r[1],oldQty:r[2],newQty:v});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
+async function delHisStock(r){if(!confirm("ລຶບ?"))return;showLoading("ລຶບ...");try{const res=await api.post("cancelStockRow",{dateStr:String(r[0]),name:r[1],qty:r[2]});showToast("ok","ສຳເລັດ!",res.message);loadHis();}catch(e){showToast("err","ຜິດພາດ!",e.message);}finally{hideLoading();}}
+
+// ════ TOAST NOTIFICATION ════
+function showToast(type,title,msg,ms){
+  ms=ms||3000;
+  const icons={ok:"✅",err:"❌",warn:"⚠️",info:"ℹ️"};
+  const wrap=document.getElementById("toast-wrap");
+  if(!wrap)return;
+  const t=document.createElement("div");
+  t.className="toast";
+  t.innerHTML=`<div class="toast-icon t-${type}">${icons[type]||"📢"}</div><div class="toast-body"><p class="toast-title">${title}</p>${msg?`<p class="toast-msg">${msg}</p>`:""}</div><div class="toast-bar bar-${type}"></div>`;
+  wrap.appendChild(t);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add("show")));
+  setTimeout(()=>{t.classList.replace("show","hide");setTimeout(()=>t.remove(),350);},ms);
+}
 </script>
 </body>
 </html>
